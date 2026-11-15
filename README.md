@@ -1,30 +1,36 @@
-> **Local test build 0.5.8-beta.1:** installed-package preparation now keeps the PKG at its original system path. This path has not yet been validated on PS5 hardware. The public download links below still refer to the previous published 0.5.4 release.
-
 <p align="center"><img src="ps5/icon0.png" width="96" alt="TITAN CORE"></p>
 <h1 align="center">TITAN CORE</h1>
 <p align="center">A PS5 game workspace with a native FPKG engine, external-drive installer and live diagnostics.</p>
 
+## Version 1.0
+
+Internal installed PKGs stay in their system path. External installation keeps your archive original, creates its game folder automatically, and shows the installed external package size separately from internal cache. Connecting a USB disk does not automatically mount raw installer PKGs. The bundled game runtime displays **PLAY NO LIMIT**.
+
+**Known limit:** full external package size in PS5 System storage is not established. The v1.0 version number does not imply universal firmware/game compatibility or a new full hardware acceptance pass. See [release validation](docs/V1_0_VALIDATION.md).
+
+يبقى التثبيت الداخلي في مساره الأصلي. التثبيت الخارجي يحتفظ بملف الأرشيف ويعرض حجم اللعبة والذاكرة المؤقتة بشكل منفصل. ملفات PKG الأصلية على USB لا تعمل mount تلقائياً. ظهور الحجم الكامل للخارجية داخل تخزين نظام PS5 ما زال غير محقق.
+
 ## ⬇️ تحميل TITAN CORE / Download TITAN CORE
 
-### [⬇️ تحميل ملف ELF مباشرة — Download ELF directly](https://github.com/devchmod/TITAN-CORE/releases/download/v0.5.4-beta.1/TITAN-CORE-0.5.4-beta.1.elf)
+### [⬇️ تحميل ملف ELF مباشرة — Download ELF directly](https://github.com/devchmod/TITAN-CORE/releases/download/v1.0.0/TITAN-CORE-v1.0.elf)
 
-**النسخة / Version: 0.5.4-beta.1** · **الملف / File: `TITAN-CORE-0.5.4-beta.1.elf`**
+**النسخة / Version: 1.0** · **الملف / File: `TITAN-CORE-v1.0.elf`**
 
 **بالعربية**
 
 1. اضغط على رابط **تحميل ملف ELF مباشرة** أعلاه لتحميل ملف التشغيل.
-2. إذا فتحت [صفحة الإصدار](https://github.com/devchmod/TITAN-CORE/releases/tag/v0.5.4-beta.1)، افتح **Assets** واضغط على **`TITAN-CORE-0.5.4-beta.1.elf`**.
+2. إذا فتحت [صفحة الإصدار](https://github.com/devchmod/TITAN-CORE/releases/tag/v1.0.0)، افتح **Assets** واضغط على **`TITAN-CORE-v1.0.elf`**.
 3. الملف المطلوب للتشغيل هو **`.elf`**. ملفات **Source code (zip / tar.gz)** هي للمطورين وليست ملف التشغيل. لا تحتاج إلى فك ضغط ملف ELF.
 4. أرسل ملف ELF إلى PS5 باستعمال أداة تحميل الـpayload/elfldr التي تستخدمها، ثم افتح `http://<PS5-IP>:8097` مع تعويض `<PS5-IP>` بعنوان جهازك.
 
 **English**
 
 1. Click **Download ELF directly** above to download the runnable payload.
-2. If you open the [release page](https://github.com/devchmod/TITAN-CORE/releases/tag/v0.5.4-beta.1), expand **Assets** and select **`TITAN-CORE-0.5.4-beta.1.elf`**.
+2. If you open the [release page](https://github.com/devchmod/TITAN-CORE/releases/tag/v1.0.0), expand **Assets** and select **`TITAN-CORE-v1.0.elf`**.
 3. You need the **`.elf`** file to run TITAN CORE. **Source code (zip / tar.gz)** downloads are for developers. The ELF does not need extraction.
 4. Send the ELF to your PS5 using your existing payload/elfldr loader, then open `http://<PS5-IP>:8097`, replacing `<PS5-IP>` with your console's address.
 
-[جميع الإصدارات / All releases](https://github.com/devchmod/TITAN-CORE/releases) · [بصمات التحقق / SHA256SUMS](https://github.com/devchmod/TITAN-CORE/releases/download/v0.5.4-beta.1/SHA256SUMS)
+[جميع الإصدارات / All releases](https://github.com/devchmod/TITAN-CORE/releases) · [بصمات التحقق / SHA256SUMS](https://github.com/devchmod/TITAN-CORE/releases/download/v1.0.0/SHA256SUMS)
 
 
 ## ⚙️ قبل التشغيل / Before loading TITAN CORE
@@ -61,12 +67,12 @@ With **Prepare installed PKGs in place automatically** enabled, TITAN CORE disco
 
 Receipt-proven internal packages moved by older TITAN CORE builds can be returned to their original installed path. The package title and recorded size must match. Pre-existing different `app.pkg` files are refused. Restoration journals and exclusively reserves the absent destination, verifies that reservation, then uses rename with a verified `/user/data` alias when required; there is no full-copy fallback. Do not install, update or uninstall the same title concurrently: the SDK does not expose an atomic no-replace rename primitive. A missing title directory can be recreated from matching cached registration metadata. Unsupported restoration leaves the old managed source intact. Manually relocated packages without a valid receipt are not moved automatically.
 
-This test build replaces the unsupported hard-link restoration observed on the console in 0.5.6, and preserves the metadata-snapshot fix from 0.5.5. Cache still occupies additional storage. Previous successful console reports cover the older homebrew import workflow; original-path launch and PS5 System storage accounting must be checked on hardware for this build. This is still the native cache/mount engine, not a new classic-system installer or retail-package conversion.
+The verified rename-based restoration replaces the earlier unsupported hard-link approach and preserves the large metadata-snapshot fix. Cache still occupies additional storage. The maintainer confirmed original-path launch and full internal System storage sizes on the development console with 0.5.7; later installer/UI changes have local tests and require their documented hardware checks. This uses the native cache/mount engine for supported debug FPKGs.
 
 ## Features
 
 - Dashboard and game library for supported debug FPKGs, folders and image sources, including exFAT.
-- USB/extended-drive browser, internal FPKG copy with progress, byte-for-byte verification and cancellation.
+- USB/extended-drive browser, internal or connected external FPKG destination, progress, byte-for-byte verification and cancellation.
 - **Original-path preparation for supported Debug Settings/Overdrive installs:** keep `app.pkg` under `/user/app/<TITLE_ID>/`, with verified recovery of earlier internal imports.
 - Reported system/payload CPU and memory, storage, live logs, kernel-log viewer and current alerts.
 - Browser-local CPU history, read-only reported health checks, JSON/CSV exports and print/Save PDF reports.
@@ -82,7 +88,7 @@ This test build replaces the unsupported hard-link restoration observed on the c
 3. Open `http://<PS5-IP>:8097` from the console or a browser on your Mac/PC/phone.
 4. Browse Library or open Installer to choose a supported PS5 debug FPKG from a mounted USB/extended drive.
 
-Installer copies one complete PKG internally and keeps the external original. The native engine then builds its cache, registers the game and mounts its content at launch. This is the homebrew/debug-FPKG workflow, not a general retail/encrypted PKG installer. Cache takes extra space and can be substantial for incompatible block layouts. Supported installed packages are prepared at their original system path. Legacy recovery refuses collisions and unavailable same-inode moves, leaving the managed source intact without creating another full package.
+Installer copies the PKG to the selected internal or external destination and keeps the original, even on the same external disk. External installation creates TITAN-CORE/Games/<TITLE_ID>/ automatically. Raw external PKGs remain Installer-only until installed. The native engine then builds its cache, registers the game and mounts its content at launch. This is the homebrew/debug-FPKG workflow, not a general retail/encrypted PKG installer. Cache takes extra space and can be substantial for incompatible block layouts. Supported installed packages are prepared at their original system path. Legacy recovery refuses collisions and unavailable same-inode moves, leaving the managed source intact without creating another full package.
 
 Do not disconnect a source drive during installation. Ordinary cancellation/errors clean the transaction's partial copy; power loss may leave a reserved `.part` directory that needs inspection before retrying. Resume and update/DLC merging are not implemented.
 
@@ -117,6 +123,38 @@ The build verifies bundled runtime/service hashes and builds both ELF stages. Th
 
 ## License and credits
 
-GPL-3.0-or-later. TITAN CORE is a derivative/aggregate project, with original authorship and upstream notices retained. The display name `chmod v0.1` applies to a custom AMPR 0.4.0 launch-notice build; it does not claim a new upstream runtime or authorship of that engine. Bundled component source snapshots, modified runtime source and notices are included under `vendor/`.
+GPL-3.0-or-later. TITAN CORE is a derivative/aggregate project, with original authorship and upstream notices retained. The component label `chmod v0.1` and `PLAY NO LIMIT` launch notice apply to a custom AMPR 0.4.0 build; it does not claim a new upstream runtime or authorship of that engine. Bundled component source snapshots, modified runtime source and notices are included under `vendor/`.
 
 See [CREDITS.md](CREDITS.md), [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES).
+
+## External destination choice
+
+In Installer, choose Internal or a connected USB/extended destination before selecting a PKG. TITAN creates `<drive>/TITAN-CORE/Games/<TITLE_ID>/` automatically. Starting with 0.6.3, installation always keeps the original download and verifies a separate installed copy, including on the same external drive. Allow space for the full copy plus working reserve. Existing installed system PKGs remain in place.
+
+Keep the destination connected while playing. Native cache still occupies internal storage and can be substantial. External source size in TITAN is not a promise of full PS5 System storage accounting. The maintainer reports successful managed external-path use on the development console; broader hardware compatibility and full external PS5 System storage accounting remain unverified. See [validation](docs/EXTERNAL_DESTINATION_VALIDATION.md).
+
+## Corrected Internal destination — 0.6.1-beta.1
+
+The Installer Internal choice now commits the new package to `/user/app/<TITLE_ID>/app.pkg` and uses the existing native system-path preparation/registration workflow. This corrects the 0.6.0 homebrew destination. External destinations remain `<drive>/TITAN-CORE/Games/`. Existing legacy homebrew packages remain discoverable without automatic migration. Download originals are retained for internal copies. See [validation](docs/INTERNAL_DESTINATION_VALIDATION.md); new hardware validation is still required.
+
+## Launch notice and game-folder help — 0.6.2-beta.1
+
+The bundled runtime launch notice now reads **PLAY NO LIMIT**. Settings uses **Game folders / Dossiers des jeux** with corrected system/external paths and an automatic-discovery placeholder. Close games before upgrading; the new notice applies on the next game start with the bundled runtime. Native installer/game behavior remains the 0.6.1 baseline. See [validation](docs/PLAY_NO_LIMIT_VALIDATION.md).
+
+## Preserve your PKG archive — 0.6.3-beta.1
+
+Installing to an external disk keeps the original PKG exactly where it was, even if the source and destination are the same disk. TITAN creates a separate verified copy in `TITAN-CORE/Games/<TITLE_ID>/`. This needs additional space for the complete package plus working reserve; insufficient space stops installation without moving or deleting the original. Existing internal `/user/app` games stay in place. See [validation](docs/PRESERVE_EXTERNAL_SOURCE_VALIDATION.md).
+
+يبقى ملف PKG الأصلي في مكانه بعد التثبيت، حتى على نفس القرص الخارجي. ينشئ TITAN نسخة للألعاب داخل `TITAN-CORE/Games/<TITLE_ID>/`؛ يجب توفير مساحة للنسخة الكاملة.
+
+## External PKGs require installation — 0.6.4-beta.1
+
+Connecting an external drive no longer auto-registers or mounts its download PKGs. Browse those originals in Installer and choose a destination. Only receipt-proven TITAN external installations (`TITAN-CORE/Games/<TITLE_ID>/<TITLE_ID>.pkg`) or recognized system-installed PKGs enter native game preparation. A folder with that name alone does not prove installation. Originals stay archived and are excluded from playable-library duplicates, even with custom scan folders. Internal PKGs, external extracted-game folders and image handling keep their existing behavior. Existing archives are not deleted. See [validation](docs/EXTERNAL_INSTALL_ONLY_VALIDATION.md).
+
+ملفات PKG الأصلية في القرص الخارجي تظهر في المثبّت فقط، ولا يتم تجهيزها أو عمل mount لها بمجرد توصيل القرص. بعد التثبيت يعتمد TITAN نسخة اللعبة في مسار التثبيت، مع الاحتفاظ بملف الأرشيف الأصلي.
+
+## External installed label and measured size — 0.6.5-beta.1
+
+Receipt-proven external installations now show **PKG · External installed** with the actual drive, package size and internal cache listed separately. Original external installer archives remain Installer-only. System-installed/internal package behavior is unchanged. This display update does not change PS5 System storage accounting; full external accounting remains unverified. See [validation and investigation](docs/EXTERNAL_STATUS_VALIDATION.md).
+
+تظهر النسخة الخارجية المعتمدة باسم «مثبّتة خارجياً»، مع القرص والحجم الحقيقي للحزمة وحجم الذاكرة المؤقتة الداخلية بشكل منفصل. حساب التخزين داخل نظام PS5 لم يتغيّر بهذه النسخة.

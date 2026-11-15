@@ -14,3 +14,7 @@ This is the Rust PS5 payload and bundled web interface derived from Kraken Mount
 - Edit review/monitor-client.js then run review/embed-monitor.py; edit update-policy.js/updates-client.js/installed-management.js then run review/embed-features.py; run review/embed-localization.py and node --check on the extracted script.
 - All game measurements/status claims must come from available console data. Unsupported sensors stay unknown.
 - Never commit console snapshots, personal logs, credentials, build targets or caches.
+
+- Installer destinations must be selected from connected mounts. Preserve the internal default. All installer destinations use verified copy and preserve the download original, including the same external drive. Reserve space for a full copy plus working headroom. Never move installed /user/app games through this installer.
+
+- External raw PKGs are installer archives, never automatic native scan/mount sources. Only receipt-proven external TITAN packages or recognized system installed paths may enter native PKG processing. Preserve external folders/images and internal discovery.

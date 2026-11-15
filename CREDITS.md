@@ -17,7 +17,7 @@ Thank you to **quer3q**, **EchoStretch**, **drakmor**, the **PS5 payload SDK con
 | Component | Upstream | Role |
 |---|---|---|
 | Kraken Mount | [quer3q/kraken-mount](https://github.com/quer3q/kraken-mount) | Native FPKG/folder mounting, cache, registration and launch code used and adapted in TITAN CORE |
-| ampr-emu-ng 0.4.0 | [quer3q/ampr-emu-ng](https://github.com/quer3q/ampr-emu-ng/tree/v0.4.0) | Packed-game runtime; custom launch-notice display label `chmod v0.1` |
+| ampr-emu-ng 0.4.0 | [quer3q/ampr-emu-ng](https://github.com/quer3q/ampr-emu-ng/tree/v0.4.0) | Packed-game runtime; custom launch notice `PLAY NO LIMIT` (component UI label `chmod v0.1`) |
 | kstuff-lite 1.11 | [EchoStretch/kstuff-lite](https://github.com/EchoStretch/kstuff-lite/releases/tag/v1.11) | Pinned resident payload, embedded unchanged |
 | ShadowMountPlus 1.7beta10 | [drakmor/ShadowMountPlus](https://github.com/drakmor/ShadowMountPlus/releases/tag/1.7beta10) | Pinned image service, embedded unchanged |
 | PS5 Dump Forge | [quer3q/ps5-dump-forge](https://github.com/quer3q/ps5-dump-forge) | Toolchain/workflow references and attributed sparse-format reader reference |
@@ -32,7 +32,7 @@ Thank you to **quer3q**, **EchoStretch**, **drakmor**, the **PS5 payload SDK con
 - Sparse-format port attribution and exact source reference: [vendor/format-reference](vendor/format-reference).
 - TITAN CORE artwork provenance: [docs/branding/PROVENANCE.md](docs/branding/PROVENANCE.md).
 
-The custom AMPR source changes only the launch-notice text. Compatible filenames, exported runtime identity and underlying engine version remain upstream 0.4.0. Upstream credits in source archives are preserved. Additional third-party code retains its own license terms; consult the included notices/source for each component.
+The current custom AMPR source changes only the launch-notice text to PLAY NO LIMIT. Compatible filenames, exported runtime identity and underlying engine version remain upstream 0.4.0. Upstream credits in source archives are preserved. Additional third-party code retains its own license terms; consult the included notices/source for each component.
 
 ## Reader and decoder source references
 
