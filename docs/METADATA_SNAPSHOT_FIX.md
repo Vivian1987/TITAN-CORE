@@ -1,0 +1,7 @@
+# Installed-package metadata snapshot fix — 0.5.5-beta.1
+
+The reported Battlefield 6 entry (PPSA19534, 01.000.016) remained under `/user/app` with `Metadata snapshot exceeds 64 MiB`. The previous metadata backup imposed a cumulative 64 MiB limit and ran before the package move. The screenshot establishes this preparation failure; it does not establish the cause of every CE-109297-8 launch failure.
+
+The snapshot now streams metadata files to disk, with a byte budget based on free internal storage minus a 256 MiB reserve. It still excludes the installed `app.pkg`, refuses symlinks/special files, avoids overwriting a completed backup, and publishes the complete snapshot by rename. File-size changes during copying are rejected. Failure removes only this attempt's newly created temporary snapshot; original installed files, completed backups and older pending attempts are preserved. Older incomplete temporary backups from previous versions are not automatically deleted.
+
+Validation: four standalone Rust regression tests passed, including metadata exceeding 64 MiB, space failure and retry, preserving old pending backups, original package exclusion, completed backup preservation and symlink refusal. The existing host suite passed all 51 tests (including these four). No new dependencies. The two-stage unified PS5 build result is recorded with the delivery. No console launch or performance test has been performed on this fix; successful Battlefield launch must be confirmed on hardware after preparation succeeds.
