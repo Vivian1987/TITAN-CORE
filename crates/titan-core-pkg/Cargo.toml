@@ -3,7 +3,7 @@ name = "titan-core-pkg"
 version = "0.1.0"
 edition = "2021"
 license = "GPL-3.0-or-later"
-description = "no_std reader for dump-forge debug FPKG packages, with its Kraken block decoder"
+description = "no_std reader for dump-forge debug FPKG packages, with its supported block decoder"
 
 [features]
 default = []
