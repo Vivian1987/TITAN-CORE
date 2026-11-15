@@ -33,3 +33,7 @@ Thank you to **quer3q**, **EchoStretch**, **drakmor**, the **PS5 payload SDK con
 - TITAN CORE artwork provenance: [docs/branding/PROVENANCE.md](docs/branding/PROVENANCE.md).
 
 The custom AMPR source changes only the launch-notice text. Compatible filenames, exported runtime identity and underlying engine version remain upstream 0.4.0. Upstream credits in source archives are preserved. Additional third-party code retains its own license terms; consult the included notices/source for each component.
+
+## Reader and decoder source references
+
+The renamed `crates/titan-core-pkg/src/layout.rs` is the existing layout reader previously named `kraken.rs`. It ports the upstream `VF/kraken_image.rs:728-1036` describe logic and `FP/mount.rs:35-283` block/layout logic. Its sparse handling references `vendor/ps5upload-fpkg/src/kraken_image.rs` (GPL-3.0-or-later). The decoder ports the Kraken block decoder vendored by ps5-dump-forge: `kraken.rs` (bit reader, arrays and LZ), `kraken/huff.rs` (Huffman helpers) and `kraken_image.rs::decode_described`. Neutral local names do not change the compression format or its authorship. AMPR codec-2 index encoding follows the upstream `ng/KRAKEN.md` contract.
