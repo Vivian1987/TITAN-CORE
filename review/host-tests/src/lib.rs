@@ -20,7 +20,7 @@ mod scan {
 
 #[path = "../../../src/ampr_index.rs"] mod ampr_index;
 #[cfg(test)]mod stream_tests{use super::ampr_index::*;
-#[test]fn incompatible_block_grids_and_sparse_chunks_require_loose_cache(){let normal=Chunk{pkg_off:65536,stored_len:262144,raw_len:262144,kraken:None};assert!(streamable("data.bin",262144,&[normal],1048576));let small=Chunk{pkg_off:65536,stored_len:131072,raw_len:131072,kraken:None};assert!(!streamable("data.bin",262144,&[small],1048576));let zero=Chunk{pkg_off:0,stored_len:0,raw_len:262144,kraken:Some(Kraken{even_len:0,mode:0})};assert!(!streamable("zero.bin",262144,&[zero],1048576));}}
+#[test]fn incompatible_block_grids_and_sparse_chunks_require_loose_cache(){let normal=Chunk{pkg_off:65536,stored_len:262144,raw_len:262144,compression:None};assert!(streamable("data.bin",262144,&[normal],1048576));let small=Chunk{pkg_off:65536,stored_len:131072,raw_len:131072,compression:None};assert!(!streamable("data.bin",262144,&[small],1048576));let zero=Chunk{pkg_off:0,stored_len:0,raw_len:262144,compression:Some(CompressedBlock{even_len:0,mode:0})};assert!(!streamable("zero.bin",262144,&[zero],1048576));}}
 
 #[path = "../../../src/relocation.rs"] mod relocation;
 #[path = "../../../src/config.rs"] mod config;
