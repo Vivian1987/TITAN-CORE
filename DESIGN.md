@@ -4,7 +4,7 @@
 
 TITAN CORE is a Rust PS5 ELF with a bundled, offline web interface on8097. The unified-stack feature coordinates pinned kstuff-lite1.11 and ShadowMountPlus1.7beta10 as separate resident processes while preserving the native FPKG/folder engine. Readiness, process/boot guards and per-title ownership avoid duplicate component launches and competing overlays.
 
-App data lives in /data/titan-core. The tile starts the saved /data/titan-core/titan-core.elf. The build has two stages: stage2 embeds/saves stage1. Upstream-compatible internal crate, protocol, index and sandbox names remain intentional.
+App data lives in /data/titan-core. The tile starts the saved /data/titan-core/titan-core.elf. The build has two stages: stage2 embeds/saves stage1. Project package names, build outputs and container image use TITAN CORE. Upstream protocol/index filenames and sandbox names remain compatible.
 
 ## Native sources
 
@@ -12,7 +12,9 @@ src/storage.rs discovers mounted internal/USB/extended drives. src/scan.rs finds
 
 ## Installed and external packages
 
-Supported /user/app packages may be imported to /data/homebrew/titan-core/TID using rename or a verified /user/data alias only. If direct movement fails, the original stays; no full-copy backup fallback. Receipts recover completed interrupted moves. Per-title ShadowMount policy coordination preserves native ownership.
+Installed sources are prepared in place: /user/app/TID/app.pkg remains the authoritative package. installed_access.rs records original permissions before enabling read/traverse bits needed by the existing read-only per-game sandbox mount. No new package copy, symlink or hard link is created for a newly prepared installed source. The auto_import_installed setting key is retained for compatibility; its UI label describes in-place preparation.
+
+Before scanning, receipt-proven internal imports may be restored to /user/app/TID/app.pkg. Exact original path, parsed title and recorded size must validate. Missing original title metadata can be staged from a matching cached param/icon and re-registered. Restoration journals an exclusively created destination reservation, validates its inode and contents immediately before rename, then uses rename (via a verified /user/data alias for nullfs paths). Pre-existing different package files are refused. The SDK has no atomic no-replace rename, so no external install/update/uninstall of the same title may run concurrently. Interrupted full reservations are recoverable; unexpected destination files are retained for inspection. There is no hard-link or full-copy fallback. Old interrupted hard links, if any, can still be completed as a same-inode recovery. Package bytes remain a single stored file. Running-game checks defer work and per-title errors are logged only when they change. No app.db size mutation is performed; System accounting and launch remain hardware acceptance checks.
 
 External installation copies a selected supported debug PKG once into /data/homebrew/titan-core/installed/TID, with progress/cancel, space/collision checks, full byte comparison, source-size/mtime verification, reparse and final rename. The external original is never deleted. Owned install roots are prioritized for native scanning. The worker shares the native work mutex. Ordinary error/cancel cleans the partial transaction; power-loss resume is not implemented. Package plus variable cache needs extra storage. No generic retail/encrypted or update/DLC merging support is implied.
 

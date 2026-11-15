@@ -1,4 +1,4 @@
-Third-party notices for kraken-mount.elf
+Third-party notices for TITAN CORE
 
 Kraken Mount is GPL-3.0-or-later (LICENSE). The ELF also contains code under the licenses
 below, whose terms require these notices to accompany binary distributions.
@@ -619,7 +619,7 @@ license:
 Additionally, some source files may contain comments with specific copyrights
 or licenses.
 
-Sparse boundary semantics in crates/kraken-mount-pkg/src/kraken.rs ported from quer3q/ps5-dump-forge commit 8a3c7d3e4bfeac3b4ddf8e9ff020e819ae8ff1cd, vendor/ps5upload-fpkg/src/kraken_image.rs, GPL-3.0-or-later. Exact reference and provenance: vendor/format-reference/.
+Sparse boundary semantics in crates/titan-core-pkg/src/kraken.rs ported from quer3q/ps5-dump-forge commit 8a3c7d3e4bfeac3b4ddf8e9ff020e819ae8ff1cd, vendor/ps5upload-fpkg/src/kraken_image.rs, GPL-3.0-or-later. Exact reference and provenance: vendor/format-reference/.
 
 
 TITAN0.5.1 display build: quer3q/ampr-emu-ng v0.4.0, GPL-3.0-or-later. Only launch-notice prefix renamed chmod v0.1 at owner request. Original and modified source ZIPs, original binary, hashes and TITAN_BRANDING.md are in vendor/ampr-emu-ng. Upstream engine identity/authorship is retained.

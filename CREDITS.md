@@ -2,9 +2,9 @@
 
 ## TITAN CORE — devchmod
 
-TITAN CORE is maintained by **[devchmod](https://github.com/devchmod)**, following six months of independent research. Project work includes the TITAN CORE interface and branding, multilingual navigation, USB FPKG installer, rename-only installed-package import, diagnostics and reporting, and integration of the resident services.
+TITAN CORE is maintained by **[devchmod](https://github.com/devchmod)**, following six months of independent research. Project work includes the TITAN CORE interface and branding, multilingual navigation, USB FPKG installer, installed-package preparation and legacy import recovery, diagnostics and reporting, and integration of the resident services.
 
-**Installed-PKG launch handling is a TITAN CORE addition:** eligible PS5 debug FPKGs installed through Debug Settings or Overdrive can be discovered under `/user/app`, moved automatically into the managed homebrew workflow without retaining a second full PKG, and prepared for native launch. The maintainer reports successful console use on firmware 13.60; native cache still takes additional space. This addresses the installed-package issue encountered with the original build used during development.
+**Installed-PKG launch handling is a TITAN CORE addition:** the earlier workflow brought supported Debug Settings/Overdrive installs into a playable homebrew library without retaining another complete PKG, with successful console use reported by the maintainer on firmware 13.60. Current versions keep eligible packages at their original system path and recover receipt-proven earlier imports, while retaining the native cache and launch engine. The maintainer confirmed original-path launch and full System storage sizes on the development console with 0.5.7-beta.1; see docs/USER_HARDWARE_CONFIRMATION.md. Native cache uses additional space.
 
 Development also addresses package discovery and duplicate library filters. Build checks and documented tests are included in this repository; see [validation](docs/VALIDATION.md) for their scope.
 

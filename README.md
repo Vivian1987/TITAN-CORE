@@ -1,3 +1,5 @@
+> **Local test build 0.5.8-beta.1:** installed-package preparation now keeps the PKG at its original system path. This path has not yet been validated on PS5 hardware. The public download links below still refer to the previous published 0.5.4 release.
+
 <p align="center"><img src="ps5/icon0.png" width="96" alt="TITAN CORE"></p>
 <h1 align="center">TITAN CORE</h1>
 <p align="center">A PS5 game workspace with a native FPKG engine, external-drive installer and live diagnostics.</p>
@@ -47,23 +49,25 @@ Developed and maintained by **[devchmod](https://github.com/devchmod)** followin
 
 [Releases](https://github.com/devchmod/TITAN-CORE/releases) · [Source](https://github.com/devchmod/TITAN-CORE) · [Credits](CREDITS.md)
 
-## Play supported PKGs installed through Debug Settings or Overdrive
+## Updates and installed-game management
 
-**Already installed a supported PS5 debug FPKG? TITAN CORE can bring it into the playable homebrew library automatically.**
+The header displays update status beside the language selector. It checks up to 100 recent public releases from the official repository, compares semantic versions (including beta versions), ignores drafts/unpublished entries and requires an uploaded ELF with an official repository download URL. Automatic checks run after console identification and at most once per 30 minutes per page session, with a manual retry option. Network/rate-limit failures remain distinct from a successful check that finds no newer release. Downloads remain a user action; no payload is automatically loaded or replaced. Checking requires browser access to GitHub. Current public releases may lag local test builds.
 
-With **Move supported installed PKGs to homebrew automatically** enabled, TITAN CORE discovers eligible packages under `/user/app`, moves the package into its managed homebrew folder, builds the native cache and registers it for launch. You do not need to move each `app.pkg` into `/data/homebrew` yourself.
+Manage installed game opens TITAN CORE's own panel. It retains package/cache details, queues a library rescan, keeps the existing confirmed cache-rebuild action, and navigates to Diagnostics. Installed-game management no longer opens the ShadowMount web UI. Uninstallation guidance points to PS5 System Settings; no new game-deletion API was introduced. Image-only tools retain their separate existing behavior. Rebuild is disabled while a game is running. A successful ready-path mount/ownership check now clears a stale earlier error.
 
-- **Debug Settings and Overdrive installs:** the maintainer reports successful launches through this workflow on the development console running firmware 13.60.
-- **One full internal PKG:** import uses a filesystem rename rather than keeping a second complete package. Native cache still uses additional space. If a safe move is unavailable, import reports the problem and leaves the source package in place.
-- **Automatic preparation:** close running games and allow scanning/cache preparation to finish with the native services ready.
+## Prepare supported installed PKGs in their original system location
 
-This TITAN CORE addition addresses the installed-PKG launch problem encountered with the original Kraken Mount build used in the maintainer's testing. That comparison describes the tested builds, not every upstream version. Support is for eligible PS5 debug FPKGs; it is not a guarantee for all packages, firmware versions, retail/encrypted content, or update/DLC combinations.
+With **Prepare installed PKGs in place automatically** enabled, TITAN CORE discovers eligible debug FPKGs under `/user/app/<TITLE_ID>/app.pkg` and builds its native launch cache without moving the package to homebrew. Read access is prepared for the game's read-only sandbox mount; original permissions are recorded first. The package remains a single physical file in the system location.
+
+Receipt-proven internal packages moved by older TITAN CORE builds can be returned to their original installed path. The package title and recorded size must match. Pre-existing different `app.pkg` files are refused. Restoration journals and exclusively reserves the absent destination, verifies that reservation, then uses rename with a verified `/user/data` alias when required; there is no full-copy fallback. Do not install, update or uninstall the same title concurrently: the SDK does not expose an atomic no-replace rename primitive. A missing title directory can be recreated from matching cached registration metadata. Unsupported restoration leaves the old managed source intact. Manually relocated packages without a valid receipt are not moved automatically.
+
+This test build replaces the unsupported hard-link restoration observed on the console in 0.5.6, and preserves the metadata-snapshot fix from 0.5.5. Cache still occupies additional storage. Previous successful console reports cover the older homebrew import workflow; original-path launch and PS5 System storage accounting must be checked on hardware for this build. This is still the native cache/mount engine, not a new classic-system installer or retail-package conversion.
 
 ## Features
 
 - Dashboard and game library for supported debug FPKGs, folders and image sources, including exFAT.
 - USB/extended-drive browser, internal FPKG copy with progress, byte-for-byte verification and cancellation.
-- **Automatic playback preparation for supported Debug Settings/Overdrive installs:** rename-only import from `/user/app` into the homebrew workflow.
+- **Original-path preparation for supported Debug Settings/Overdrive installs:** keep `app.pkg` under `/user/app/<TITLE_ID>/`, with verified recovery of earlier internal imports.
 - Reported system/payload CPU and memory, storage, live logs, kernel-log viewer and current alerts.
 - Browser-local CPU history, read-only reported health checks, JSON/CSV exports and print/Save PDF reports.
 - 31 console-language/regional choices, flag cues, Arabic RTL, themes and controller-friendly navigation.
@@ -78,7 +82,7 @@ This TITAN CORE addition addresses the installed-PKG launch problem encountered 
 3. Open `http://<PS5-IP>:8097` from the console or a browser on your Mac/PC/phone.
 4. Browse Library or open Installer to choose a supported PS5 debug FPKG from a mounted USB/extended drive.
 
-Installer copies one complete PKG internally and keeps the external original. The native engine then builds its cache, registers the game and mounts its content at launch. This is the homebrew/debug-FPKG workflow, not a general retail/encrypted PKG installer. Cache takes extra space and can be substantial for incompatible block layouts. Moving a supported existing `/user/app` package uses rename only; if direct movement is unavailable, its source stays in place without creating another full package.
+Installer copies one complete PKG internally and keeps the external original. The native engine then builds its cache, registers the game and mounts its content at launch. This is the homebrew/debug-FPKG workflow, not a general retail/encrypted PKG installer. Cache takes extra space and can be substantial for incompatible block layouts. Supported installed packages are prepared at their original system path. Legacy recovery refuses collisions and unavailable same-inode moves, leaving the managed source intact without creating another full package.
 
 Do not disconnect a source drive during installation. Ordinary cancellation/errors clean the transaction's partial copy; power loss may leave a reserved `.part` directory that needs inspection before retrying. Resume and update/DLC merging are not implemented.
 
@@ -109,7 +113,7 @@ The source uses Rust 1.99.0 and PS5 payload SDK 0.43 in the Docker build. Keep c
 TITAN_UNIFIED_STACK=1 bash ps5/build.sh
 ```
 
-The build verifies bundled runtime/service hashes and builds both ELF stages. Internal crate/toolchain names retain upstream compatibility; the user-facing application is TITAN CORE. See [architecture](DESIGN.md), [validation](docs/VALIDATION.md) and [credits](CREDITS.md).
+The build verifies bundled runtime/service hashes and builds both ELF stages. The packages are `titan-core` and `crates/titan-core-pkg`; the Docker toolchain image is `titan-core-ps5` and the output is `target/ps5/titan-core.elf`. Upstream runtime protocol filenames remain compatible. See [architecture](DESIGN.md), [validation](docs/VALIDATION.md) and [credits](CREDITS.md).
 
 ## License and credits
 

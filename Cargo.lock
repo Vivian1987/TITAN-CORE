@@ -9,16 +9,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3bd1574e617a9a6c1f8f8181bd7e841e1f20e4277607ef28945765188d6284d4"
 
 [[package]]
-name = "kraken-mount"
-version = "0.5.4-beta.1"
+name = "titan-core"
+version = "0.5.9-beta.1"
 dependencies = [
- "kraken-mount-pkg",
+ "titan-core-pkg",
  "libc",
  "serde_json",
 ]
 
 [[package]]
-name = "kraken-mount-pkg"
+name = "titan-core-pkg"
 version = "0.1.0"
 
 [[package]]

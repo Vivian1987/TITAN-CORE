@@ -1,24 +1,24 @@
 [package]
-name = "kraken-mount"
-version = "0.5.4-beta.1"
+name = "titan-core"
+version = "0.5.9-beta.1"
 edition = "2021"
 license = "GPL-3.0-or-later"
 
 [workspace]
-members = [".", "crates/kraken-mount-pkg"]
+members = [".", "crates/titan-core-pkg"]
 
 [features]
-# Stage 2 of ps5/build.sh: embeds stage 1 (env KRAKEN_SELF_ELF) to save it as the tile's copy.
+# Stage 2 of ps5/build.sh: embeds stage 1 (env TITAN_SELF_ELF) to save it as the tile's copy.
 self-copy = []
 unified-stack = []
 
 [dependencies]
-kraken-mount-pkg = { path = "crates/kraken-mount-pkg" }
+titan-core-pkg = { path = "crates/titan-core-pkg" }
 libc = "0.2.187"
 serde_json = "1"
 
 # Kraken decoding is hot during cache builds.
-[profile.release.package.kraken-mount-pkg]
+[profile.release.package.titan-core-pkg]
 opt-level = 3
 
 [profile.release]
