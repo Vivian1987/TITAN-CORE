@@ -1,12 +1,12 @@
 //! Per-game cache /data/titan-core/caches/<TID> (DESIGN.md "Cache"). Folder: fakelib/ only.
-//! FPKG: the cache is /app0: sce_sys, eboot.bin and every PRX extracted, fakelib/, kraken/ (launch.rs
+//! FPKG: the cache is /app0: sce_sys, eboot.bin and every PRX extracted, fakelib/, the source mount (launch.rs
 //! mounts the pkg's folder there), the two AMPR indexes; `.done` (JSON stamp, mtime = build start) last.
 //! fakelib/ (both kinds) = the game's or backport's libs, then /data/titan-core/ampr/* copied on
 //! top; an ampr or inject_ampr change only recomposes fakelib/ (refresh_fakelib), no full rebuild.
 //! /app0 is writable: files the game writes here stay across rebuilds (`.built` lists what a build
 //! made, a rebuild removes only that); purge() deletes them too.
 //! /data/titan-core/ampr is never copied here: launch.rs mounts it as its own layer.
-use crate::ampr_index::{self, Chunk, IndexFile, Kraken};
+use crate::ampr_index::{self, Chunk, IndexFile, CompressedBlock};
 use crate::config::{FakelibMode, Settings};
 use crate::scan::{Kind, Source};
 use titan_core_pkg::{Entry, Pkg, PRead};
@@ -26,9 +26,9 @@ const LIB_DIRS: [&str; 2] = ["fakelib2/", "fakelib/"];
 const BUILT: &str = ".built";
 /// What fakelib/'s ampr copies came from: `ampr_state` when composed (JSON).
 const AMPR_STATE: &str = ".ampr";
-/// pkg caches: the mount point for the pkg's folder at /app0/kraken (launch.rs).
+/// pkg caches: the mount point for the pkg's folder at the runtime source mount (launch.rs).
 pub const PKG_MOUNT_DIR: &str = "kraken";
-/// pkg caches: one line, no newline, the .pkg relative to /app0 (`kraken/<file name>`); ng opens /app0/ + it.
+/// pkg caches: one line, no newline, the .pkg relative to /app0 (the source mount plus file name); ng opens /app0/ + it.
 const IMAGE_FILE: &str = "kraken.image";
 const CHUNK: usize = 4 << 20;
 /// SMP sm_fakelib.c fakelib_emulator_names.
@@ -126,13 +126,13 @@ fn exec_mode(path: &Path) -> Result<()> {
     fs::set_permissions(path, fs::Permissions::from_mode(0o777))
 }
 
-/// `e`'s Kraken blocks as index chunks.
+/// `e`'s compressed blocks as index chunks.
 fn chunks(p: &Pkg, e: &Entry) -> Result<Vec<Chunk>> {
     let blocks = p.blocks(e).map_err(vfs)?;
     let mut out = Vec::with_capacity(blocks.len());
     for b in blocks {
-        let kraken = b.compressed.then_some(Kraken { even_len: b.desc.even_len, mode: b.desc.mode });
-        out.push(Chunk { pkg_off: b.pkg_off, stored_len: b.stored_len, raw_len: b.raw_len, kraken });
+        let compression = b.compressed.then_some(CompressedBlock { even_len: b.desc.even_len, mode: b.desc.mode });
+        out.push(Chunk { pkg_off: b.pkg_off, stored_len: b.stored_len, raw_len: b.raw_len, compression });
     }
     Ok(out)
 }
@@ -388,7 +388,7 @@ pub fn check(src: &Source, s: &Settings) -> Fresh {
             return Fresh::Stale(format!("{k} changed"));
         }
     }
-    // A cache built before kraken.image existed (or with it deleted): ng could not find the pkg.
+    // A cache built before the runtime package descriptor existed (or with it deleted): ng could not find the pkg.
     if src.kind == Kind::Pkg && !dir(&src.title_id).join(IMAGE_FILE).is_file() {
         return Fresh::Stale(format!("{IMAGE_FILE} missing"));
     }
@@ -608,7 +608,7 @@ fn build_inner(src: &Source, s: &Settings, before: &HashSet<PathBuf>) -> Result<
     }
     // fakelib/ is not indexed: it reaches the game as the common/lib overlay, and with a writable
     // /app0 an index miss goes to the real file (ng), so a refresh needs no index rewrite.
-    // launch.rs mounts the pkg's folder on /app0/kraken; kraken.image names the pkg in it for ng.
+    // launch.rs mounts the pkg's folder on the runtime source mount; the runtime package descriptor names the pkg in it for ng.
     fs::create_dir_all(dir.join(PKG_MOUNT_DIR))?;
     let name = src.path.file_name().and_then(|n| n.to_str()).ok_or_else(|| bad(format!("{}: file name is not UTF-8", src.path.display())))?;
     fs::write(dir.join(IMAGE_FILE), format!("{PKG_MOUNT_DIR}/{name}"))?;

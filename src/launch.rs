@@ -332,7 +332,7 @@ impl Session {
             self.mount_dir(&format!("{}{from}", root.display()), &from, 0);
         }
         // Writable /app0 (the game's files: the dump folder, or the pkg cache), then the pkg's folder
-        // at /app0/kraken (ng finds the .pkg there). Both on top of the system's /app0.
+        // at the runtime source mount (ng finds the .pkg there). Both on top of the system's /app0.
         let app0 = format!("{}/app0", root.display());
         if !self.mount_app0(&app0) {
             return;
@@ -350,7 +350,7 @@ impl Session {
     /// included) over the sandbox's /app0, only when the system's one is read-only. Not yet mounted
     /// at the sandbox's first sight: the exec pass (mount_data again) gets it.
     /// ponytail: not adopted by a later copy of the payload (adopt_existing only knows /data and USB).
-    /// False while the system's /app0 is not mounted (then /app0/kraken must wait too).
+    /// False while the system's /app0 is not mounted (then the runtime source mount must wait too).
     fn mount_app0(&mut self, app0: &str) -> bool {
         let from = format!("/system_ex/app/{}", self.tid);
         match top_mount(app0) {
@@ -366,7 +366,7 @@ impl Session {
         }
         let opts = [("fstype", Some("nullfs")), ("from", Some(from.as_str())), ("fspath", Some(app0))];
         if let Err(e) = sys::nmount_opt(&opts, 0) {
-            // Still the system's /app0: /app0/kraken can go on it, the game just can't write.
+            // Still the system's /app0: the runtime source mount can go on it, the game just can't write.
             tlog!("{} sandbox /app0 rw mount FAILED errno={} ({e}): {from} -> {app0}", self.tid, e.raw_os_error().unwrap_or(0));
             return true;
         }

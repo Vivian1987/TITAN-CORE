@@ -1,6 +1,6 @@
 //! Writes ampr_emu.index (AMPRIDX3) and ampr_assets.index (AMPRPAK4) so ampr-emu-ng serves the
-//! .pkg as an LZ4-mode pack of RAW and KRAKEN chunks (one per Kraken block, ng/KRAKEN.md) from
-//! one volume, the .pkg named in /app0/kraken.image (pack_id 0).
+//! .pkg as an LZ4-mode pack of RAW and compressed chunks (one per compressed block, upstream index documentation (see CREDITS.md)) from
+//! one volume, the .pkg named in the runtime package descriptor (pack_id 0).
 //! Layouts follow ampr-emu-ng `ampr-format/src/index.rs`, `ampr-lz4/src/manifest.rs` (the
 //! runtime runs the full `Manifest::open` on load) and the dump-forge writers
 //! (the vendored fpkg crate's `ampr_index.rs`, `ps5-dump-forge-lz4/src/writer.rs`).
@@ -13,12 +13,12 @@ pub struct IndexFile {
     /// Path under /app0 without a leading slash, e.g. "data/level1.bin".
     pub path: String,
     pub size: u64,
-    /// None: a loose file extracted on disk. Some: the file's Kraken blocks in kraken.pkg, in
+    /// None: a loose file extracted on disk. Some: the file's compressed blocks in the runtime package volume, in
     /// file order, one chunk each.
     pub chunks: Option<Vec<Chunk>>,
 }
 
-/// One Kraken block of a packed file: `stored_len` bytes at `pkg_off` in kraken.pkg that
+/// One compressed block of a packed file: `stored_len` bytes at `pkg_off` in the runtime package volume that
 /// decode to `raw_len` bytes (the block's logical length; the file's tail block may run past
 /// the file's end).
 pub struct Chunk {
@@ -26,12 +26,12 @@ pub struct Chunk {
     pub stored_len: u32,
     pub raw_len: u32,
     /// None: stored as plain bytes (stored_len == raw_len). Some: a compressed block.
-    pub kraken: Option<Kraken>,
+    pub compression: Option<CompressedBlock>,
 }
 
-/// The block record fields `kraken::decode_block` needs (`kraken::Desc`).
+/// The block record fields `decoder::decode_block` needs (`decoder::Desc`).
 #[derive(Clone, Copy)]
-pub struct Kraken {
+pub struct CompressedBlock {
     pub even_len: u32,
     pub mode: u8,
 }
@@ -60,20 +60,20 @@ const ENDIAN_MARKER: u32 = 0x0102_0304;
 const FILE_PACKED: u32 = 1;
 const FILE_STREAMING: u32 = 4;
 const CHUNK_RAW: u32 = 0;
-/// ng/KRAKEN.md: codec 2, location = offset (40 bits) | even_len << 40 | mode << 59.
-const CHUNK_KRAKEN: u32 = 2;
-const CHUNK_KRAKEN_FULL: u8 = 0x10;
+/// upstream index documentation (see CREDITS.md): codec 2, location = offset (40 bits) | even_len << 40 | mode << 59.
+const CHUNK_COMPRESSED: u32 = 2;
+const CHUNK_COMPRESSED_FULL: u8 = 0x10;
 const CHUNK_STREAMING: u8 = 2;
 const CHUNK_PAGE_CONTAINED: u8 = 4;
 const CHUNK_PAGE_ALIGNED: u8 = 8;
 const PACK_IO_PAGE_LAYOUT: u32 = 2;
 /// io_page_size of the volume; the payload starts one page in (payload_offset >= DAT_HEADER).
 const PAGE: u64 = 65536; // 64 KiB, measured best (pkg game wait/read: 4 KiB 4.14 ms, 16 KiB 3.33, 64 KiB 2.48-2.62, 256 KiB 2.93-3.31; 256 KiB reads ~35-50% more bytes)
-/// One chunk per Kraken block: block_shift 18 = 256 KiB (`decoder::BLOCK`).
+/// One chunk per compressed block: block_shift 18 = 256 KiB (`decoder::BLOCK`).
 const BLOCK_SHIFT: u32 = 18;
 const BLOCK: u64 = 1 << BLOCK_SHIFT;
 const OFFSET_LIMIT: u64 = 1 << 48;
-const KRAKEN_OFFSET_LIMIT: u64 = 1 << 40;
+const COMPRESSED_OFFSET_LIMIT: u64 = 1 << 40;
 const PATH_MAX: usize = 1024;
 const NAME_MAX: usize = 255;
 
@@ -189,10 +189,10 @@ struct Plan {
     flags: u32,
 }
 
-/// One chunk per Kraken block at block_shift 18 (manifest.rs `validate_file`: chunk_count =
+/// One chunk per compressed block at block_shift 18 (manifest.rs `validate_file`: chunk_count =
 /// ceil(size / block), chunk i decodes to min(block, size - i * block) bytes). A RAW tail block
-/// past the file's end is cut to the file; a KRAKEN one is a full 256 KiB block decoded whole
-/// (CHUNK_KRAKEN_FULL). `vol_size` is the page-rounded volume size.
+/// past the file's end is cut to the file; a compressed one is a full 256 KiB block decoded whole
+/// (CHUNK_COMPRESSED_FULL). `vol_size` is the page-rounded volume size.
 /// Whether the bundled runtime's pack format can represent this exact block grid.
 pub fn streamable(path:&str,size:u64,blocks:&[Chunk],vol_size:u64)->bool{plan(path,size,blocks,vol_size).is_ok()}
 
@@ -208,7 +208,7 @@ fn plan(path: &str, size: u64, blocks: &[Chunk], vol_size: u64) -> Result<Plan> 
         if raw_len < want || raw_len > BLOCK {
             return Err(fail(at, "its length does not fit the 256 KiB block grid"));
         }
-        let (stored, codec, mut flags, loc) = match c.kraken {
+        let (stored, codec, mut flags, loc) = match c.compression {
             None => {
                 if c.stored_len != c.raw_len {
                     return Err(fail(at, "a raw block's stored length differs from its length"));
@@ -218,25 +218,25 @@ fn plan(path: &str, size: u64, blocks: &[Chunk], vol_size: u64) -> Result<Plan> 
             Some(k) => {
                 let stored = u64::from(c.stored_len);
                 if stored == 0 || stored > BLOCK || u64::from(k.even_len) > stored || k.mode >= 32 {
-                    return Err(fail(at, "compressed block not encodable as a KRAKEN chunk"));
+                    return Err(fail(at, "compressed block not encodable as a compressed chunk"));
                 }
                 if raw_len > want && raw_len != BLOCK {
                     return Err(fail(at, "a short compressed block runs past the file's end"));
                 }
-                let full = if raw_len > want { CHUNK_KRAKEN_FULL } else { 0 };
+                let full = if raw_len > want { CHUNK_COMPRESSED_FULL } else { 0 };
                 let loc = at | u64::from(k.even_len) << 40 | u64::from(k.mode) << 59;
-                (stored, CHUNK_KRAKEN, full, loc)
+                (stored, CHUNK_COMPRESSED, full, loc)
             }
         };
         let end = at + stored;
-        let limit = if codec == CHUNK_KRAKEN { KRAKEN_OFFSET_LIMIT } else { OFFSET_LIMIT };
+        let limit = if codec == CHUNK_COMPRESSED { COMPRESSED_OFFSET_LIMIT } else { OFFSET_LIMIT };
         if at < PAGE || end > vol_size || end >= limit {
             return Err(fail(at, "outside the packable volume range"));
         }
         let contained = stored <= PAGE && at / PAGE == (end - 1) / PAGE;
         let aligned = at % PAGE == 0 && (stored > PAGE || contained);
-        // KRAKEN and RAW chunks are both exempt from the page-layout rules in our ng fork
-        // (ng/KRAKEN.md): the runtime reads the covering page window at any offset. Not marking
+        // compressed and RAW chunks are both exempt from the page-layout rules in our ng fork
+        // (upstream index documentation (see CREDITS.md)): the runtime reads the covering page window at any offset. Not marking
         // files STREAMING keeps ng's decoded cache on for them (caches.rs refuses STREAMING).
         flags |= if contained { CHUNK_PAGE_CONTAINED } else { 0 } | if aligned { CHUNK_PAGE_ALIGNED } else { 0 };
         out.push((loc, (stored as u32 - 1) | codec << 20, flags));
@@ -344,7 +344,7 @@ fn write_atomic(dir: &Path, name: &str, data: &[u8]) -> Result<()> {
 }
 
 /// Writes both index files into `dir` (the game's cache dir, seen as /app0).
-/// `pkg` is the .pkg (ng opens the path in /app0/kraken.image): its size bounds the volume and its mtime goes in
+/// `pkg` is the .pkg (ng opens the path in the runtime package descriptor): its size bounds the volume and its mtime goes in
 /// every record.
 pub fn write(dir: &Path, pkg: &Path, files: &[IndexFile]) -> std::io::Result<()> {
     let meta = std::fs::metadata(pkg)?;
