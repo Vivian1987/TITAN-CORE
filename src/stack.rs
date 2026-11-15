@@ -158,7 +158,7 @@ impl Stack {
         if !self.native_owns(tid){return Err("Title belongs to ShadowMount or service snapshot is unavailable".into());}
         allow_title(tid);Ok(())
     }
-    /// Native AMPR must own common/lib for imported installed packages. Preserve the
+    /// Native AMPR must own common/lib for installed packages prepared in place. Preserve the
     /// previous per-title policy before changing only this title through upstream's API.
     pub fn prepare_import_overlay(&self,tid:&str)->Result<(),String>{
         if !self.native_owns(tid){return Err("Native title ownership unavailable".into());}
@@ -167,12 +167,12 @@ impl Stack {
         let path=dir.join("shadow-policy.json");
         match OpenOptions::new().write(true).create_new(true).open(&path){
             Ok(mut f)=>{let previous=json!({"title_id":tid,"original_mode":g["fakelib_mode_override"].as_str().unwrap_or("default"),"effective_mode":g["fakelib_mode"],"import_mode":"disabled"});f.write_all(previous.to_string().as_bytes()).and_then(|_|f.sync_all()).map_err(|e|e.to_string())?;},
-            Err(e)if e.kind()==std::io::ErrorKind::AlreadyExists=>{let previous:Value=serde_json::from_slice(&fs::read(&path).map_err(|e|e.to_string())?).map_err(|e|format!("Incomplete original overlay policy backup: {e}"))?;if previous["title_id"]!=tid || !matches!(previous["original_mode"].as_str(),Some("default"|"disabled"|"full"|"emulators")){return Err("Invalid original overlay policy backup; package was not moved".into());}},Err(e)=>return Err(e.to_string()),
+            Err(e)if e.kind()==std::io::ErrorKind::AlreadyExists=>{let previous:Value=serde_json::from_slice(&fs::read(&path).map_err(|e|e.to_string())?).map_err(|e|format!("Incomplete original overlay policy backup: {e}"))?;if previous["title_id"]!=tid || !matches!(previous["original_mode"].as_str(),Some("default"|"disabled"|"full"|"emulators")){return Err("Invalid original overlay policy backup; package remains in its original location".into());}},Err(e)=>return Err(e.to_string()),
         }
         if g["fakelib_mode"]=="disabled"{return Ok(());}
         let v=engine_json(self.port(),"/api/v1/games/fakelib",json!({"title_id":tid,"mode":"disabled"}),5)?;
-        if !import_policy_confirmed(&v){return Err("ShadowMount did not confirm native overlay ownership; package was not moved".into());}
-        log!("{tid}: ShadowMount overlay disabled for native import; original policy preserved");Ok(())
+        if !import_policy_confirmed(&v){return Err("ShadowMount did not confirm native overlay ownership; package remains in its original location".into());}
+        log!("{tid}: ShadowMount overlay disabled for native in-place preparation; original policy preserved");Ok(())
     }
     pub fn restore_import_overlay(&self,tid:&str)->Result<(),String>{
         let path=std::path::Path::new("/data/titan-core/installed-backups").join(tid).join("shadow-policy.json");

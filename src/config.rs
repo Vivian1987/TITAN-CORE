@@ -46,7 +46,7 @@ impl Default for Settings {
 
 const HELP: &[(&str, &str)] = &[
     ("scanpath", "replaces the default scan roots (/data/homebrew, /data/etaHEN/games, <drive>/homebrew, ...)"),
-    ("auto_import_installed", "move supported installed PS5 PKGs into managed homebrew folders for native launch"),
+    ("auto_import_installed", "prepare supported installed PS5 PKGs in their original system location for native launch"),
     ("inject_ampr", "true = copy /data/titan-core/ampr/* on top of every game's fakelib (a change only refreshes fakelib/)"),
     ("game_fakelib", "game's own fakelib: emulators | full | off"),
     ("backports", "true = apply backports/<TID>* from the game's scan root, then the other roots, then /data/homebrew"),

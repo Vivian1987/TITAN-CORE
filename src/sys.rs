@@ -164,7 +164,7 @@ fn toast_json(msg: &str, now: u64) -> String {
         "rawData": {
             "viewTemplateType": "InteractiveToastTemplateB",
             "channelType": "ServiceFeedback",
-            "bundleName": "kraken-mount",
+            "bundleName": "titan-core",
             "useCaseId": "IDC",
             "soundEffect": "none",
             "toastOverwriteType": "No",

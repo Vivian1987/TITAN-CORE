@@ -1,4 +1,4 @@
-//! TITAN CORE (kraken-mount): finds FPKG .pkg files and game folders on the internal SSD and USB/extended
+//! TITAN CORE: finds FPKG .pkg files and game folders on the internal SSD and USB/extended
 //! drives, keeps a per-game cache in /data/titan-core/caches/<TID>, registers each game on the
 //! home screen and overlays its fakelib at launch (DESIGN.md). Web UI on port web::PORT.
 
@@ -20,6 +20,7 @@ mod web;
 mod library;
 mod migration;
 mod installed;
+mod installed_access;
 mod relocation;
 mod backup;
 mod installer;
@@ -81,7 +82,7 @@ fn backport_of(src: &Source) -> Option<&std::path::Path> {
 /// Builds when stale or forced, then registers. Ok(true) when the title was (re)registered.
 fn build_and_register(state: &State, s: &Settings, src: &Source, fresh: &Fresh, forced: bool) -> std::io::Result<bool> {
     let tid = &src.title_id;
-    if library::installed_package_path(&src.path){backup::installed(tid)?;}
+    if library::installed_package_path(&src.path){backup::installed(tid, storage::drives().into_iter().find(|d| d.mount == "/data").map_or(0, |d| d.free))?;}
     if let (false, Fresh::Fakelib(why)) = (forced, fresh) {
         // Only fakelib/ is behind: recompose it, then go on as a fresh cache (mount or register).
         log!("{tid}: {why}; refreshing fakelib only");
@@ -133,7 +134,7 @@ fn process(state: &State, s: &Settings, src: &Source, registered: &mut HashSet<S
                 #[cfg(feature="unified-stack")]
                 if let Err(error)=state.stack.coordinate_native(tid){state.titles.lock().unwrap().remove(tid);state.update(&src.path,|g|{g.status="error";g.error=Some(error);});return;}
                 state.titles.lock().unwrap().insert(tid.clone());
-                state.update(&src.path, |g| g.status = "ready");
+                state.update(&src.path, |g| { g.status = "ready"; g.error = None; });
                 return;
             }
             Err(e) => Err(e),
@@ -233,7 +234,7 @@ fn klog_capture() {
 pub const SELF_COPY: &str = "/data/titan-core/titan-core.elf";
 /// Stage 1 of ps5/build.sh, embedded only in the pushed (stage 2) ELF; the saved copy has none.
 #[cfg(feature = "self-copy")]
-const SELF_ELF: &[u8] = include_bytes!(env!("KRAKEN_SELF_ELF"));
+const SELF_ELF: &[u8] = include_bytes!(env!("TITAN_SELF_ELF"));
 #[cfg(not(feature = "self-copy"))]
 const SELF_ELF: &[u8] = &[];
 
@@ -341,6 +342,8 @@ fn main() {
     std::thread::spawn(move||web::serve(web_state,listener));
     std::thread::spawn(save_self_copy);
     let mut watcher_started=false;
+    #[cfg(feature="unified-stack")]
+    let mut restore_errors: HashMap<String,String> = HashMap::new();
     let (mut registered, mut failed) = (HashSet::new(), HashMap::new());
     loop {
         // A game runs: nothing that could touch its app0 or /system_ex mount. Rescan, rebuild
@@ -359,6 +362,29 @@ fn main() {
         sys::LOG_FILE.store(s.log, Ordering::Relaxed);
         *state.settings.lock().unwrap() = s.clone();
         state.busy.store(true, Ordering::SeqCst);
+        #[cfg(feature="unified-stack")]
+        if s.auto_import_installed && state.stack.native_ready() && !state.paused(){
+            let mut restored=false;
+            for (tid,result) in relocation::restore_legacy(std::path::Path::new(relocation::ROOT),std::path::Path::new("/user/app"),||state.paused(),|path,expected|{
+                let (actual,_,_)=cache::peek_pkg(path)?;
+                if actual!=expected{return Err(std::io::Error::other("Legacy package title does not match its receipt; source kept"));}
+                if state.paused(){return Err(std::io::Error::other("A game started; restoration deferred"));}
+                let metadata=cache::dir(expected).join("sce_sys");
+                let recreated=relocation::restore_title_directory(std::path::Path::new("/user/app"),expected,&metadata)?;
+                if recreated||!register::is_registered(expected){
+                    if state.paused(){return Err(std::io::Error::other("A game started; title registration deferred"));}
+                    register::register(expected,&cache::dir(expected),&metadata,None)?;
+                    log!("{expected}: original title metadata registered from validated cache");
+                }
+                Ok(())
+            }){
+                match result{
+                    Ok(path)=>{restore_errors.remove(&tid);restored=true;log!("{tid}: restored original system package path {} without a package copy",path.display());},
+                    Err(error)=>{let message=error.to_string();if restore_errors.get(&tid)!=Some(&message){log!("{tid}: original-path restoration deferred: {message}");restore_errors.insert(tid,message);}}
+                }
+            }
+            if restored{if let Err(error)=state.stack.rescan(){log!("Refresh installed inventory after restoration: {error}");}}
+        }
         let mut roots = if s.scan_paths.is_empty() { storage::default_scan_roots() } else { s.scan_paths.clone() };
         roots.extend(relocation::scan_roots(std::path::Path::new(relocation::ROOT)));
         let mut install_roots=installer::roots();install_roots.extend(roots.iter().cloned());
@@ -367,18 +393,19 @@ fn main() {
         if s.auto_import_installed && state.stack.native_ready(){
             let native=r.games.iter().map(|g|g.title_id.clone()).collect();
             for g in installed::candidates(&state.stack.games(),&native){
-                if !state.settings.lock().unwrap().auto_import_installed{break;}
+                if state.paused() || !state.settings.lock().unwrap().auto_import_installed{break;}
                 let path=PathBuf::from(g["path"].as_str().unwrap());let tid=g["title_id"].as_str().unwrap();
                 let prepared=(||->Result<scan::Source,String>{
                     let mut src=scan::installed_source(&path,tid).map_err(|e|e.to_string())?;
-                    backup::installed(tid).map_err(|e|e.to_string())?;
+                    backup::installed(tid, storage::drives().into_iter().find(|d| d.mount == "/data").map_or(0, |d| d.free)).map_err(|e|e.to_string())?;
+                    if state.paused(){return Err("A game started; installed package preparation deferred".into());}
                     state.stack.prepare_import_overlay(tid)?;
-                    log!("{tid}: importing installed package into homebrew; source {}",path.display());
-                    src.path=match relocation::move_package(&path,tid,src.size,std::path::Path::new(relocation::ROOT)){
+                    if state.paused(){return Err("A game started; in-place access preparation deferred".into());}
+                    src.path=match installed_access::prepare(&path,tid,src.size){
                         Ok(path)=>path,
-                        Err(error)=>{if path.is_file(){if let Err(restore)=state.stack.restore_import_overlay(tid){log!("{tid}: original package preserved, but overlay policy restore needs attention: {restore}");}}return Err(error.to_string());}
-                    };src.drive="/data".into();
-                    log!("{tid}: imported to {}; preparing native cache",src.path.display());Ok(src)
+                        Err(error)=>{if let Err(restore)=state.stack.restore_import_overlay(tid){log!("{tid}: original package kept; overlay policy restore needs attention: {restore}");}return Err(error.to_string());}
+                    };
+                    log!("{tid}: native package kept in place at {}; preparing native cache",src.path.display());Ok(src)
                 })();
                 match prepared{Ok(src)=>r.games.push(src),Err(error)=>{if state.installed_errors.lock().unwrap().get(path.to_string_lossy().as_ref())!=Some(&error){log!("Installed FPKG {tid}: {error}");}r.errors.push((path,error));}}
             }

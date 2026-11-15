@@ -9,7 +9,7 @@
 use crate::ampr_index::{self, Chunk, IndexFile, Kraken};
 use crate::config::{FakelibMode, Settings};
 use crate::scan::{Kind, Source};
-use kraken_mount_pkg::{Entry, Pkg, PRead};
+use titan_core_pkg::{Entry, Pkg, PRead};
 use std::collections::{BTreeMap, HashSet};
 use std::fs::{self, File};
 use std::io::{Error, ErrorKind, Result, Write};
@@ -40,15 +40,15 @@ const EMULATORS: [&str; 5] = [
     "libSceAmpr.sprx",
 ];
 
-/// The .pkg file as a kraken_mount_pkg reader (newtype: the orphan rule forbids `impl PRead for File`).
+/// The .pkg file as a titan_core_pkg reader (newtype: the orphan rule forbids `impl PRead for File`).
 struct Io(File);
 
 impl PRead for Io {
-    fn pread(&self, off: u64, buf: &mut [u8]) -> std::result::Result<usize, kraken_mount_pkg::Error> {
+    fn pread(&self, off: u64, buf: &mut [u8]) -> std::result::Result<usize, titan_core_pkg::Error> {
         loop {
             match self.0.read_at(buf, off) {
                 Err(e) if e.kind() == ErrorKind::Interrupted => continue,
-                r => return r.map_err(|e| kraken_mount_pkg::Error::Io(e.raw_os_error().unwrap_or(-1))),
+                r => return r.map_err(|e| titan_core_pkg::Error::Io(e.raw_os_error().unwrap_or(-1))),
             }
         }
     }
@@ -58,9 +58,9 @@ fn bad(msg: String) -> Error {
     Error::new(ErrorKind::InvalidData, msg)
 }
 
-fn vfs(e: kraken_mount_pkg::Error) -> Error {
+fn vfs(e: titan_core_pkg::Error) -> Error {
     match e {
-        kraken_mount_pkg::Error::Io(code) if code > 0 => Error::from_raw_os_error(code),
+        titan_core_pkg::Error::Io(code) if code > 0 => Error::from_raw_os_error(code),
         e => bad(e.to_string()),
     }
 }
