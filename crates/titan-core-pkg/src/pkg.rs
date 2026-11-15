@@ -7,7 +7,7 @@ use alloc::string::{String, ToString};
 use alloc::vec;
 use alloc::vec::Vec;
 
-use crate::kraken::{KBlock, Kraken};
+use crate::layout::{KBlock, BlockLayout};
 use crate::outer::{self, OuterFile};
 use crate::{Error, Extent, PRead};
 
@@ -209,7 +209,7 @@ pub(crate) struct Image {
     /// `pfs_image.dat`: inner-image (stored) offset -> outer block.
     pub image: OuterFile,
     /// Mount offset -> stored range in `pfs_image.dat`.
-    pub kraken: Kraken,
+    pub layout: BlockLayout,
     /// Debug only (`probe`): the whole decoded mount, served by `read_mount` when set.
     #[cfg(feature = "probe")]
     pub probe_mount: Option<Vec<u8>>,
@@ -234,13 +234,13 @@ impl Image {
         let image = OuterFile::map(io, &geo, &nodes[image_ino], "pfs_image.dat")?;
         let naps = OuterFile::map(io, &geo, &nodes[naps_ino], "naps_pkg_layout.dat")?;
         drop(nodes);
-        let kraken = Kraken::open(io, &naps, image.size)?;
+        let layout = BlockLayout::open(io, &naps, image.size)?;
         Ok(Image {
             pfs_offset: h.pfs_offset,
             meta_base: h.meta_base,
             cnt,
             image,
-            kraken,
+            layout,
             #[cfg(feature = "probe")]
             probe_mount: None,
         })
@@ -249,14 +249,14 @@ impl Image {
     /// Mount size in bytes (the inner filesystem's logical size).
     #[allow(dead_code)]
     pub fn mount_size(&self) -> u64 {
-        self.kraken.mount_size
+        self.layout.mount_size
     }
 
     fn check_range(&self, off: u64, len: u64) -> Result<(), Error> {
-        if off.checked_add(len).map_or(true, |e| e > self.kraken.mount_size) {
+        if off.checked_add(len).map_or(true, |e| e > self.layout.mount_size) {
             return Err(corrupt(format!(
                 "mount range {off:#x}+{len:#x} runs past the mount's {:#x}",
-                self.kraken.mount_size
+                self.layout.mount_size
             )));
         }
         Ok(())
@@ -267,10 +267,10 @@ impl Image {
     /// `Unsupported` when a block in the range is compressed (its bytes are not plaintext).
     pub fn extents(&self, off: u64, len: u64, out: &mut Vec<Extent>) -> Result<(), Error> {
         self.check_range(off, len)?;
-        if let Some(b) = self.kraken.range(off, len).iter().find(|b| !b.raw()) {
-            return Err(unsupported(format!("the block at mount {:#x} is Kraken-compressed", b.logical)));
+        if let Some(b) = self.layout.range(off, len).iter().find(|b| !b.raw()) {
+            return Err(unsupported(format!("the block at mount {:#x} is compressed", b.logical)));
         }
-        for (at, n) in self.kraken.stored(off, len) {
+        for (at, n) in self.layout.stored(off, len) {
             self.image.pkg_extents(at, n, out)?;
         }
         Ok(())
@@ -312,7 +312,7 @@ impl Image {
         self.check_range(off, len)?;
         let mut done = 0usize;
         let mut runs = Vec::new();
-        for b in self.kraken.range(off, len) {
+        for b in self.layout.range(off, len) {
             let inner = (off + done as u64 - b.logical) as usize;
             let n = (b.len as usize - inner).min(buf.len() - done);
             let out = &mut buf[done..done + n];

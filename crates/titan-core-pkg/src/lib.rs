@@ -1,21 +1,21 @@
-//! Read a ps5-dump-forge debug FPKG (`.pkg`) in place: plaintext (`PPRPLAIN-NOAUTH!`), Kraken
-//! layout at any level (`stored` or Kraken-compressed blocks, no byte shuffles), no LIH patch.
-//! Every file maps to a list of Kraken blocks; files whose blocks are all raw also map to
+//! Read a ps5-dump-forge debug FPKG (`.pkg`) in place: plaintext (`PPRPLAIN-NOAUTH!`), package
+//! layout at any level (`stored` or compressed blocks, no byte shuffles), no LIH patch.
+//! Every file maps to a list of package blocks; files whose blocks are all raw also map to
 //! plaintext byte runs of the `.pkg`.
 //!
 //! Ported from ps5-dump-forge (`crates/ps5-dump-forge-fpkg` and its vendored fpkg crate),
 //! GPL-3.0-or-later. See ps5-dump-forge's fpkg reader for the format.
 //!
 //! Layers: FIH header + CNT table (`pkg.rs`), outer PFS superblock, dinodes and block maps
-//! (`outer.rs`), the Kraken layout descriptor (`kraken.rs`).
+//! (`outer.rs`), the package layout descriptor (`layout.rs`).
 
 #![no_std]
 
 extern crate alloc;
 
-/// The Kraken block decoder.
+/// The package block decoder.
 pub mod decoder;
-mod kraken;
+mod layout;
 mod outer;
 mod pkg;
 mod tree;
@@ -194,13 +194,13 @@ fn cnt_blocks(at: u64, size: u64, out: &mut Vec<Block>) {
     }
 }
 
-/// A file's Kraken blocks, or why `blocks()` refuses it: its data starts inside a block, or a
+/// A file's package blocks, or why `blocks()` refuses it: its data starts inside a block, or a
 /// block's stored bytes are split across `.pkg` runs. `tmp` is scratch.
 fn file_blocks(image: &pkg::Image, w: &tree::Walked, tmp: &mut Vec<Extent>, out: &mut Vec<Block>) -> Result<(), String> {
     if w.size == 0 {
         return Ok(());
     }
-    let range = image.kraken.range(w.logical, w.size);
+    let range = image.layout.range(w.logical, w.size);
     if range.first().map(|b| b.logical) != Some(w.logical) {
         return Err(alloc::format!("{}: its data (mount {:#x}) does not start on a block boundary", w.path, w.logical));
     }
@@ -238,9 +238,9 @@ pub struct Extent {
     pub len: u64,
 }
 
-/// One Kraken block of a file: `raw_len` logical bytes, stored as `stored_len` contiguous bytes
+/// One package block of a file: `raw_len` logical bytes, stored as `stored_len` contiguous bytes
 /// at `pkg_off` in the `.pkg`. A raw block's stored bytes are its logical bytes
-/// (`stored_len == raw_len`); a compressed one needs `kraken::decode_block`. Only a file's last
+/// (`stored_len == raw_len`); a compressed one needs `decoder::decode_block`. Only a file's last
 /// block can extend past its end; the bytes beyond the file's size belong to no file.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Block {
@@ -248,7 +248,7 @@ pub struct Block {
     pub pkg_off: u64,
     pub stored_len: u32,
     pub compressed: bool,
-    /// Decode fields for `kraken::decode_block` (meaningful when `compressed`).
+    /// Decode fields for `decoder::decode_block` (meaningful when `compressed`).
     pub desc: crate::decoder::Desc,
 }
 
@@ -295,11 +295,11 @@ impl Pkg {
         match self.file(e) {
             None => Ok(&[]),
             Some(n) if n.ext_ok => Ok(&self.extents[n.ext_start as usize..n.ext_end as usize]),
-            Some(_) => Err(pkg::unsupported(alloc::format!("{}: has Kraken-compressed blocks, no plaintext extents", e.path))),
+            Some(_) => Err(pkg::unsupported(alloc::format!("{}: has compressed blocks, no plaintext extents", e.path))),
         }
     }
 
-    /// The Kraken blocks of `e`, consecutive, covering file bytes `[0, size)` in order (empty
+    /// The package blocks of `e`, consecutive, covering file bytes `[0, size)` in order (empty
     /// for a directory or an empty file). `Unsupported` when its data does not start on a block
     /// boundary or a block's stored bytes are not one contiguous `.pkg` range.
     pub fn blocks(&self, e: &Entry) -> Result<&[Block], Error> {
@@ -346,7 +346,7 @@ impl Pkg {
 pub mod probe {
     use super::*;
 
-    /// One Kraken block: mount range, stored range in `pfs_image.dat`, record fields.
+    /// One package block: mount range, stored range in `pfs_image.dat`, record fields.
     #[derive(Debug, Clone, Copy)]
     pub struct Block {
         pub logical: u64,
@@ -392,7 +392,7 @@ pub mod probe {
                 Err(e) => (Vec::new(), Some(e)),
             };
             let blocks = image
-                .kraken
+                .layout
                 .probe_blocks()
                 .map(|(logical, len, stored_at, stored_len, even_len, mode)| Block { logical, len, stored_at, stored_len, even_len, mode })
                 .collect();
