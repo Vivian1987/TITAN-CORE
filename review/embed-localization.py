@@ -44,9 +44,9 @@ function bindTranslations() {
     var key = node.nodeValue.trim();
     if (!blocked && Object.prototype.hasOwnProperty.call(MESSAGES.en, key)) textBindings.push({node:node, source:node.nodeValue, key:key});
   }
-  var elements = document.querySelectorAll('[aria-label], [title], [alt]');
+  var elements = document.querySelectorAll('[aria-label], [title], [alt], [placeholder]');
   for (var i = 0; i < elements.length; i++) {
-    ['aria-label','title','alt'].forEach(function (attr) {
+    ['aria-label','title','alt','placeholder'].forEach(function (attr) {
       var value = elements[i].getAttribute(attr);
       if (value && Object.prototype.hasOwnProperty.call(MESSAGES.en,value)) attributeBindings.push({node:elements[i],attr:attr,key:value});
     });

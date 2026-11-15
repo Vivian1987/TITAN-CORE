@@ -1,0 +1,11 @@
+{
+  "changed_runtime_source": [
+    "crates/ampr-sys/src/rt/exports.rs"
+  ],
+  "runtime_archive_contains_target_spec": true,
+  "notice_in_built_staticlib": true,
+  "old_notice_absent_from_staticlib": true,
+  "runtime_sha256": "8e087965c3f16d24611023d365bb08b0ae409a46ecb01d8b9a11333b8318850f",
+  "runtime_bytes": 775392,
+  "host_test_count_including_notice": 166
+}
