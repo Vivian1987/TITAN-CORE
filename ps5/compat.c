@@ -39,7 +39,7 @@ __asm__(".symver ps5_getmntinfo,getmntinfo@FBSD_1.0");
 /* std's available_parallelism asks cpuset_getaffinity(CPU_LEVEL_WHICH, CPU_WHICH_PID, -1) with
  * libc's 256-bit cpuset_t; the PS5 refuses that (ERANGE) and std fell back to sysconf's 16 CPUs,
  * while a payload may run on 5 (mask 0xea00: CPUs 9, 11, 13-15), so every pool ran 3x
- * oversubscribed (a .pkg's Kraken at 9 MB/s with 15 threads, 43 with 4). The thread query with the
+ * oversubscribed (package block decoding at 9 MB/s with 15 threads, 43 with 4). The thread query with the
  * kernel's 128-bit set works, and a thread starts with its process's mask, so the process query is
  * answered from the calling thread's. */
 #include <string.h>
