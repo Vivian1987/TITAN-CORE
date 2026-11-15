@@ -246,9 +246,9 @@ Installed PKG|PKG installé|لعبة PKG مثبّتة|已安装的 PKG|Installie
 Installed size|Taille installée|حجم التثبيت|安装大小|Installierte Größe
 Manage installed game|Gérer le jeu installé|إدارة اللعبة المثبّتة|管理已安装游戏|Installiertes Spiel verwalten
 Preparing compatibility|Préparation de la compatibilité|جارٍ تجهيز التوافق|正在准备兼容模式|Kompatibilität wird vorbereitet
-Move supported installed PKGs to homebrew automatically|Déplacer automatiquement les PKG installés compatibles vers homebrew|نقل ملفات PKG المثبّتة المتوافقة إلى homebrew تلقائياً|自动将兼容的已安装 PKG 移至 homebrew|Kompatible installierte PKGs automatisch nach homebrew verschieben
+Prepare installed PKGs in place automatically|Préparer automatiquement les PKG installés à leur emplacement d’origine|تجهيز ملفات PKG المثبّتة في مسارها الأصلي تلقائياً|在原始位置自动准备已安装的 PKG|Installierte PKGs automatisch am Originalspeicherort vorbereiten
 Imported packages are stored in /data/homebrew/titan-core. Existing destination files are never replaced.|Les paquets importés sont stockés dans /data/homebrew/titan-core. Les fichiers de destination existants ne sont jamais remplacés.|تُحفظ الملفات المستوردة في /data/homebrew/titan-core. لا يتم استبدال الملفات الموجودة في الوجهة.|导入的包保存在 /data/homebrew/titan-core，不会替换目标位置已有的文件。|Importierte Pakete liegen in /data/homebrew/titan-core. Vorhandene Zieldateien werden nie ersetzt.
-Waiting for homebrew import|En attente d’importation vers homebrew|في انتظار النقل إلى homebrew|等待导入 homebrew|Warte auf homebrew-Import
+Waiting for in-place preparation|En attente de préparation sur place|في انتظار التجهيز في المسار الأصلي|等待在原位置准备|Warten auf Vorbereitung am Originalort
 Installer|Installation|التثبيت|安装器|Installation
 Install from USB or external storage|Installer depuis USB ou disque externe|التثبيت من USB أو قرص خارجي|从 USB 或外部存储安装|Von USB oder externem Speicher installieren
 FPKG INSTALLER|INSTALLATION FPKG|تثبيت FPKG|FPKG 安装器|FPKG-INSTALLATION
@@ -361,3 +361,31 @@ Report downloaded.|Rapport téléchargé.|تم تحميل التقرير.|报告
 Exported the last snapshot; console is offline.|Dernier instantané exporté ; console hors ligne.|تم تصدير آخر لقطة؛ الجهاز غير متصل.|已导出最后快照；主机离线。|Letzte Momentaufnahme exportiert; Konsole offline.
 Allow a new window to print or save a PDF.|Autorisez une nouvelle fenêtre pour imprimer ou enregistrer un PDF.|اسمح بنافذة جديدة للطباعة أو حفظ PDF.|请允许新窗口以打印或保存 PDF。|Neues Fenster zum Drucken oder Speichern als PDF erlauben.
 Use the print dialog to save a PDF.|Utilisez la fenêtre d’impression pour enregistrer un PDF.|استعمل نافذة الطباعة لحفظ PDF.|使用打印对话框保存 PDF。|Im Druckdialog als PDF speichern.
+Updates|Mises à jour|التحديثات|更新|Updates
+Update available|Mise à jour disponible|تحديث متوفر|有可用更新|Update verfügbar
+Checking updates…|Recherche de mises à jour…|جارٍ البحث عن تحديثات…|正在检查更新…|Updates werden gesucht…
+No newer update|Aucune mise à jour plus récente|لا يوجد تحديث أحدث|没有更新的版本|Kein neueres Update
+Check unavailable|Vérification indisponible|تعذّر فحص التحديثات|无法检查更新|Prüfung nicht verfügbar
+TITAN CORE updates|Mises à jour TITAN CORE|تحديثات TITAN CORE|TITAN CORE 更新|TITAN CORE Updates
+Current version|Version actuelle|النسخة الحالية|当前版本|Aktuelle Version
+A newer published ELF is available.|Un fichier ELF publié plus récent est disponible.|يتوفر ملف ELF منشور بإصدار أحدث.|已有更新的 ELF 版本可供下载。|Eine neuere veröffentlichte ELF-Datei ist verfügbar.
+No newer published ELF was found.|Aucun fichier ELF publié plus récent n’a été trouvé.|لم يتم العثور على ملف ELF منشور بإصدار أحدث.|未找到更新的已发布 ELF。|Keine neuere veröffentlichte ELF-Datei gefunden.
+No published ELF is available yet.|Aucun fichier ELF n’est encore publié.|لا يوجد ملف ELF منشور بعد.|尚无已发布的 ELF。|Noch keine veröffentlichte ELF-Datei verfügbar.
+GitHub request limit reached. Try again later.|Limite de requêtes GitHub atteinte. Réessayez plus tard.|تم بلوغ حد طلبات GitHub. حاول لاحقاً.|已达到 GitHub 请求限制，请稍后重试。|GitHub-Anfragelimit erreicht. Bitte später erneut versuchen.
+Could not check GitHub. Check your connection and try again.|Impossible de vérifier GitHub. Vérifiez votre connexion et réessayez.|تعذّر فحص GitHub. تحقق من اتصالك وحاول مجدداً.|无法检查 GitHub，请检查连接后重试。|GitHub konnte nicht geprüft werden. Verbindung prüfen und erneut versuchen.
+Checks published releases on the official TITAN CORE repository.|Vérifie les versions publiées du dépôt officiel TITAN CORE.|يفحص الإصدارات المنشورة في مستودع TITAN CORE الرسمي.|检查 TITAN CORE 官方仓库的已发布版本。|Prüft veröffentlichte Versionen im offiziellen TITAN CORE Repository.
+Pre-release|Préversion|إصدار تجريبي|预发布版本|Vorabversion
+Download ELF|Télécharger ELF|تحميل ELF|下载 ELF|ELF herunterladen
+Release notes|Notes de version|ملاحظات الإصدار|发行说明|Versionshinweise
+Download the ELF, close games, then load it with your usual ELF loader.|Téléchargez l’ELF, fermez les jeux puis chargez-le avec votre chargeur ELF habituel.|حمّل ملف ELF وأغلق الألعاب، ثم شغّله بأداة تحميل ELF المعتادة.|下载 ELF，关闭游戏，然后使用常用的 ELF 加载器加载。|ELF herunterladen, Spiele schließen und mit dem üblichen ELF-Loader laden.
+Last checked|Dernière vérification|آخر فحص|上次检查|Zuletzt geprüft
+Check again|Vérifier à nouveau|إعادة الفحص|重新检查|Erneut prüfen
+Connect to the console to identify the current version.|Connectez la console pour identifier la version actuelle.|اتصل بالجهاز لتحديد النسخة الحالية.|请连接主机以识别当前版本。|Konsole verbinden, um die aktuelle Version zu ermitteln.
+Refresh library|Actualiser la bibliothèque|تحديث المكتبة|刷新游戏库|Bibliothek aktualisieren
+Package kept in its installed location. Native cache is managed by TITAN CORE.|Le PKG reste à son emplacement installé. TITAN CORE gère le cache natif.|تبقى الحزمة في مسار تثبيتها ويتولى TITAN CORE تدبير الكاش.|安装包保留在原安装位置，原生缓存由 TITAN CORE 管理。|Das Paket bleibt am Installationsort. TITAN CORE verwaltet den nativen Cache.
+Waiting for TITAN CORE to prepare this installed package.|En attente de la préparation de ce PKG installé par TITAN CORE.|في انتظار تجهيز الحزمة المثبّتة بواسطة TITAN CORE.|正在等待 TITAN CORE 准备此已安装的包。|Warten auf die Vorbereitung des installierten Pakets durch TITAN CORE.
+Use Rebuild cache to prepare the game again. Your installed PKG stays in place.|Utilisez Reconstruire le cache pour préparer le jeu à nouveau. Le PKG installé reste en place.|استعمل إعادة بناء الكاش لتجهيز اللعبة مجدداً. تبقى الحزمة المثبّتة في مكانها.|使用重建缓存重新准备游戏，已安装的 PKG 保留原位。|Cache neu erstellen bereitet das Spiel erneut vor. Das installierte PKG bleibt am selben Ort.
+To uninstall, use PS5 Settings → Storage → Games and Apps.|Pour désinstaller, utilisez Paramètres PS5 → Stockage → Jeux et applications.|لحذف اللعبة، استعمل إعدادات PS5 ← التخزين ← الألعاب والتطبيقات.|卸载请使用 PS5 设置 → 存储 → 游戏和应用。|Zum Deinstallieren PS5-Einstellungen → Speicher → Spiele und Apps verwenden.
+Scan queued. It will resume after the game exits.|Analyse en attente. Elle reprendra après la fermeture du jeu.|الفحص في الانتظار وسيستأنف بعد إغلاق اللعبة.|扫描已排队，将在游戏退出后继续。|Scan vorgemerkt. Er wird nach dem Beenden des Spiels fortgesetzt.
+Library scan requested.|Analyse de la bibliothèque demandée.|تم طلب فحص المكتبة.|已请求扫描游戏库。|Bibliotheksscan angefordert.
+Connection error.|Erreur de connexion.|خطأ في الاتصال.|连接错误。|Verbindungsfehler.
