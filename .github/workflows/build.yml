@@ -60,7 +60,7 @@ jobs:
         run: TITAN_UNIFIED_STACK=1 bash ps5/build.sh
       - name: sha256
         run: |
-          cp target/ps5/kraken-mount.elf TITAN-CORE.elf
+          cp target/ps5/titan-core.elf TITAN-CORE.elf
           sha256sum TITAN-CORE.elf | tee SHA256SUMS
       - uses: actions/upload-artifact@v4
         with:
