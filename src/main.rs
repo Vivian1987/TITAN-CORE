@@ -112,6 +112,16 @@ fn build_and_register(state: &State, s: &Settings, src: &Source, fresh: &Fresh, 
     Ok(true)
 }
 
+/// System-path PKGs use the same resident-service ownership gate as classic installs.
+#[cfg(feature="unified-stack")]
+fn coordinate_source(state:&State,src:&Source)->Result<(),String>{
+    if library::installed_package_path(&src.path){
+        installed_access::prepare(&src.path,&src.title_id,src.size).map_err(|e|e.to_string())?;
+        if let Err(error)=state.stack.prepare_import_overlay(&src.title_id){let _=state.stack.rescan();return Err(error);}
+    }
+    state.stack.coordinate_native(&src.title_id)
+}
+
 /// One game of the scan: check, build, register, status. A failed game is retried only when
 /// its inputs_key changes or a rebuild is forced.
 fn process(state: &State, s: &Settings, src: &Source, registered: &mut HashSet<String>, failed: &mut HashMap<PathBuf, String>) {
@@ -132,7 +142,7 @@ fn process(state: &State, s: &Settings, src: &Source, registered: &mut HashSet<S
         match register::mount(tid, &cache::app0(src), backport_of(src)) {
             Ok(()) => {
                 #[cfg(feature="unified-stack")]
-                if let Err(error)=state.stack.coordinate_native(tid){state.titles.lock().unwrap().remove(tid);state.update(&src.path,|g|{g.status="error";g.error=Some(error);});return;}
+                if let Err(error)=coordinate_source(state,src){state.titles.lock().unwrap().remove(tid);state.update(&src.path,|g|{g.status="error";g.error=Some(error);});return;}
                 state.titles.lock().unwrap().insert(tid.clone());
                 state.update(&src.path, |g| { g.status = "ready"; g.error = None; });
                 return;
@@ -147,7 +157,7 @@ fn process(state: &State, s: &Settings, src: &Source, registered: &mut HashSet<S
     match r {
         Ok(new) => {
             #[cfg(feature="unified-stack")]
-            if let Err(error)=state.stack.coordinate_native(tid){
+            if let Err(error)=coordinate_source(state,src){
                 state.titles.lock().unwrap().remove(tid);
                 log!("{tid}: native overlay coordination: {error}");
                 state.update(&src.path,|g|{g.status="error";g.error=Some(format!("Overlay coordination: {error}"));});return;

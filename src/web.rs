@@ -115,7 +115,7 @@ impl State {
     }
 }
 
-fn game_json(g: &Game) -> serde_json::Value {
+fn game_json(g: &Game, external_installs: &[PathBuf]) -> serde_json::Value {
     let (kind, packing) = match g.src.kind {
         Kind::Pkg => ("pkg", None),
         Kind::Folder(Packing::Plain) => ("folder", Some("plain")),
@@ -130,6 +130,7 @@ fn game_json(g: &Game) -> serde_json::Value {
         "kind": kind,
         "installed_pkg":crate::library::installed_package_path(&g.src.path),
         "native_installed":crate::library::installed_package_path(&g.src.path),
+        "external_installed":kind=="pkg" && external_installs.contains(&g.src.path),
         "packing": packing,
         "drive": g.src.drive,
         "size": g.src.size,
@@ -291,12 +292,15 @@ fn route(state: &State, head: &str, body: &[u8], loopback: bool) -> Reply {
         #[cfg(not(feature="unified-stack"))]
         return reply(503,"text/plain","Kernel log requires the background service");
     }
+    if path=="/api/installer/destinations"&&method=="GET"{return reply(200,"application/json",crate::installer::destinations().to_string());}
     if path=="/api/installer/status"&&method=="GET"{return reply(200,"application/json",state.installer.status().to_string());}
     if path=="/api/installer/browse"&&method=="POST"{return match std::str::from_utf8(body).map_err(|e|e.to_string()).and_then(|p|crate::installer::browse(p).map_err(|e|e.to_string())){Ok(v)=>reply(200,"application/json",v.to_string()),Err(e)=>reply(400,"text/plain",e)};}
     if path=="/api/installer/cancel"&&method=="POST"{state.installer.cancel();return no_content();}
     if path=="/api/installer/start"&&method=="POST"{
         if state.paused(){return reply(409,"text/plain","Close the running game before installing");}
-        let result=std::str::from_utf8(body).map_err(|e|e.to_string()).and_then(|p|crate::installer::external(Path::new(p),false).map_err(|e|e.to_string())).and_then(|p|state.installer.queue(p).map_err(|e|e.to_string()));
+        let result=(||->Result<(),String>{let raw=std::str::from_utf8(body).map_err(|e|e.to_string())?;
+            if raw.trim_start().starts_with('{'){let v:serde_json::Value=serde_json::from_str(raw).map_err(|e|e.to_string())?;let p=v["path"].as_str().ok_or("Missing source path")?;let destination=v["destination"].as_str().ok_or("Missing destination drive")?;let p=crate::installer::external(Path::new(p),false).map_err(|e|e.to_string())?;state.installer.queue_to(p,destination).map_err(|e|e.to_string())}
+            else{let p=crate::installer::external(Path::new(raw),false).map_err(|e|e.to_string())?;state.installer.queue(p).map_err(|e|e.to_string())}})();
         return match result{Ok(())=>{state.wake();reply(200,"application/json","{\"queued\":true}")},Err(e)=>reply(409,"text/plain",e)};
     }
     if method=="POST"&&path=="/api/quit"&&state.installer.active(){return reply(409,"text/plain","Cancel or finish the installation before stopping TITAN");}
@@ -414,7 +418,8 @@ fn dbg_file(path: &str, query: &str) -> Reply {
 }
 
 fn api_state(state: &State) -> Vec<u8> {
-    let games: Vec<_> = state.games.lock().unwrap().iter().map(game_json).collect();
+    let external_installs = crate::installer::external_installs();
+    let games: Vec<_> = state.games.lock().unwrap().iter().map(|g|game_json(g,&external_installs)).collect();
     let all = storage::drives();
     let drives: Vec<_> = all
         .iter()

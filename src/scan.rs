@@ -143,6 +143,7 @@ pub fn scan(roots: &[String], backports: bool) -> ScanResult {
     let mut result = ScanResult { games: Vec::new(), duplicates: Vec::new(), errors: Vec::new() };
     let mut seen = HashSet::new();
     let cached = cached_pkgs();
+    let installed_roots = crate::installer::roots();
     for root in roots {
         let root = Path::new(root);
         let entries = match fs::read_dir(root) {
@@ -173,6 +174,17 @@ pub fn scan(roots: &[String], backports: bool) -> ScanResult {
             };
             let (kind, size, param) = if metadata.is_file()
                 && path.extension().is_some_and(|e| e.eq_ignore_ascii_case("pkg")) {
+                // External download archives belong to Installer, never automatic mount discovery.
+                // Only a receipt-proven TITAN installation or a genuine system PKG path is playable.
+                if crate::storage::drive_of(&path) != "/data"
+                    && !crate::library::installed_package_path(&path)
+                    && !installed_roots.iter().any(|dir| {
+                        let dir = Path::new(dir);
+                        dir.file_name().is_some_and(|tid| path == dir.join(format!("{}.pkg", tid.to_string_lossy())))
+                            && path.canonicalize().ok().as_ref() == Some(&path)
+                    }) {
+                    continue;
+                }
                 let mtime = match metadata.modified() {
                     Ok(mtime) => mtime,
                     Err(e) => {
