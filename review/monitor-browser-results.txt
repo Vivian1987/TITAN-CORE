@@ -1,0 +1,726 @@
+PASS 1920 ar one image filter
+PASS 1920 ar language has flag
+PASS 1920 ar locale selected
+PASS 1920 ar dashboard fits
+PASS 1920 ar library fits
+PASS 1920 ar installer fits
+PASS 1920 ar storage-page fits
+PASS 1920 ar diagnostics fits
+PASS 1920 ar settings fits
+PASS 1920 ar removed controls absent
+PASS 1920 ar settings grouped
+PASS 1920 zh-CN one image filter
+PASS 1920 zh-CN language has flag
+PASS 1920 zh-CN locale selected
+PASS 1920 zh-CN dashboard fits
+PASS 1920 zh-CN library fits
+PASS 1920 zh-CN installer fits
+PASS 1920 zh-CN storage-page fits
+PASS 1920 zh-CN diagnostics fits
+PASS 1920 zh-CN settings fits
+PASS 1920 zh-CN removed controls absent
+PASS 1920 zh-CN settings grouped
+PASS 1920 zh-TW one image filter
+PASS 1920 zh-TW language has flag
+PASS 1920 zh-TW locale selected
+PASS 1920 zh-TW dashboard fits
+PASS 1920 zh-TW library fits
+PASS 1920 zh-TW installer fits
+PASS 1920 zh-TW storage-page fits
+PASS 1920 zh-TW diagnostics fits
+PASS 1920 zh-TW settings fits
+PASS 1920 zh-TW removed controls absent
+PASS 1920 zh-TW settings grouped
+PASS 1920 cs one image filter
+PASS 1920 cs language has flag
+PASS 1920 cs locale selected
+PASS 1920 cs dashboard fits
+PASS 1920 cs library fits
+PASS 1920 cs installer fits
+PASS 1920 cs storage-page fits
+PASS 1920 cs diagnostics fits
+PASS 1920 cs settings fits
+PASS 1920 cs removed controls absent
+PASS 1920 cs settings grouped
+PASS 1920 da one image filter
+PASS 1920 da language has flag
+PASS 1920 da locale selected
+PASS 1920 da dashboard fits
+PASS 1920 da library fits
+PASS 1920 da installer fits
+PASS 1920 da storage-page fits
+PASS 1920 da diagnostics fits
+PASS 1920 da settings fits
+PASS 1920 da removed controls absent
+PASS 1920 da settings grouped
+PASS 1920 nl one image filter
+PASS 1920 nl language has flag
+PASS 1920 nl locale selected
+PASS 1920 nl dashboard fits
+PASS 1920 nl library fits
+PASS 1920 nl installer fits
+PASS 1920 nl storage-page fits
+PASS 1920 nl diagnostics fits
+PASS 1920 nl settings fits
+PASS 1920 nl removed controls absent
+PASS 1920 nl settings grouped
+PASS 1920 en-GB one image filter
+PASS 1920 en-GB language has flag
+PASS 1920 en-GB locale selected
+PASS 1920 en-GB dashboard fits
+PASS 1920 en-GB library fits
+PASS 1920 en-GB installer fits
+PASS 1920 en-GB storage-page fits
+PASS 1920 en-GB diagnostics fits
+PASS 1920 en-GB settings fits
+PASS 1920 en-GB removed controls absent
+PASS 1920 en-GB settings grouped
+PASS 1920 en-US one image filter
+PASS 1920 en-US language has flag
+PASS 1920 en-US locale selected
+PASS 1920 en-US dashboard fits
+PASS 1920 en-US library fits
+PASS 1920 en-US installer fits
+PASS 1920 en-US storage-page fits
+PASS 1920 en-US diagnostics fits
+PASS 1920 en-US settings fits
+PASS 1920 en-US removed controls absent
+PASS 1920 en-US settings grouped
+PASS 1920 fi one image filter
+PASS 1920 fi language has flag
+PASS 1920 fi locale selected
+PASS 1920 fi dashboard fits
+PASS 1920 fi library fits
+PASS 1920 fi installer fits
+PASS 1920 fi storage-page fits
+PASS 1920 fi diagnostics fits
+PASS 1920 fi settings fits
+PASS 1920 fi removed controls absent
+PASS 1920 fi settings grouped
+PASS 1920 fr-CA one image filter
+PASS 1920 fr-CA language has flag
+PASS 1920 fr-CA locale selected
+PASS 1920 fr-CA dashboard fits
+PASS 1920 fr-CA library fits
+PASS 1920 fr-CA installer fits
+PASS 1920 fr-CA storage-page fits
+PASS 1920 fr-CA diagnostics fits
+PASS 1920 fr-CA settings fits
+PASS 1920 fr-CA removed controls absent
+PASS 1920 fr-CA settings grouped
+PASS 1920 fr-FR one image filter
+PASS 1920 fr-FR language has flag
+PASS 1920 fr-FR locale selected
+PASS 1920 fr-FR dashboard fits
+PASS 1920 fr-FR library fits
+PASS 1920 fr-FR installer fits
+PASS 1920 fr-FR storage-page fits
+PASS 1920 fr-FR diagnostics fits
+PASS 1920 fr-FR settings fits
+PASS 1920 fr-FR removed controls absent
+PASS 1920 fr-FR settings grouped
+PASS 1920 de one image filter
+PASS 1920 de language has flag
+PASS 1920 de locale selected
+PASS 1920 de dashboard fits
+PASS 1920 de library fits
+PASS 1920 de installer fits
+PASS 1920 de storage-page fits
+PASS 1920 de diagnostics fits
+PASS 1920 de settings fits
+PASS 1920 de removed controls absent
+PASS 1920 de settings grouped
+PASS 1920 el one image filter
+PASS 1920 el language has flag
+PASS 1920 el locale selected
+PASS 1920 el dashboard fits
+PASS 1920 el library fits
+PASS 1920 el installer fits
+PASS 1920 el storage-page fits
+PASS 1920 el diagnostics fits
+PASS 1920 el settings fits
+PASS 1920 el removed controls absent
+PASS 1920 el settings grouped
+PASS 1920 hu one image filter
+PASS 1920 hu language has flag
+PASS 1920 hu locale selected
+PASS 1920 hu dashboard fits
+PASS 1920 hu library fits
+PASS 1920 hu installer fits
+PASS 1920 hu storage-page fits
+PASS 1920 hu diagnostics fits
+PASS 1920 hu settings fits
+PASS 1920 hu removed controls absent
+PASS 1920 hu settings grouped
+PASS 1920 id one image filter
+PASS 1920 id language has flag
+PASS 1920 id locale selected
+PASS 1920 id dashboard fits
+PASS 1920 id library fits
+PASS 1920 id installer fits
+PASS 1920 id storage-page fits
+PASS 1920 id diagnostics fits
+PASS 1920 id settings fits
+PASS 1920 id removed controls absent
+PASS 1920 id settings grouped
+PASS 1920 it one image filter
+PASS 1920 it language has flag
+PASS 1920 it locale selected
+PASS 1920 it dashboard fits
+PASS 1920 it library fits
+PASS 1920 it installer fits
+PASS 1920 it storage-page fits
+PASS 1920 it diagnostics fits
+PASS 1920 it settings fits
+PASS 1920 it removed controls absent
+PASS 1920 it settings grouped
+PASS 1920 ja one image filter
+PASS 1920 ja language has flag
+PASS 1920 ja locale selected
+PASS 1920 ja dashboard fits
+PASS 1920 ja library fits
+PASS 1920 ja installer fits
+PASS 1920 ja storage-page fits
+PASS 1920 ja diagnostics fits
+PASS 1920 ja settings fits
+PASS 1920 ja removed controls absent
+PASS 1920 ja settings grouped
+PASS 1920 ko one image filter
+PASS 1920 ko language has flag
+PASS 1920 ko locale selected
+PASS 1920 ko dashboard fits
+PASS 1920 ko library fits
+PASS 1920 ko installer fits
+PASS 1920 ko storage-page fits
+PASS 1920 ko diagnostics fits
+PASS 1920 ko settings fits
+PASS 1920 ko removed controls absent
+PASS 1920 ko settings grouped
+PASS 1920 nb one image filter
+PASS 1920 nb language has flag
+PASS 1920 nb locale selected
+PASS 1920 nb dashboard fits
+PASS 1920 nb library fits
+PASS 1920 nb installer fits
+PASS 1920 nb storage-page fits
+PASS 1920 nb diagnostics fits
+PASS 1920 nb settings fits
+PASS 1920 nb removed controls absent
+PASS 1920 nb settings grouped
+PASS 1920 pl one image filter
+PASS 1920 pl language has flag
+PASS 1920 pl locale selected
+PASS 1920 pl dashboard fits
+PASS 1920 pl library fits
+PASS 1920 pl installer fits
+PASS 1920 pl storage-page fits
+PASS 1920 pl diagnostics fits
+PASS 1920 pl settings fits
+PASS 1920 pl removed controls absent
+PASS 1920 pl settings grouped
+PASS 1920 pt-BR one image filter
+PASS 1920 pt-BR language has flag
+PASS 1920 pt-BR locale selected
+PASS 1920 pt-BR dashboard fits
+PASS 1920 pt-BR library fits
+PASS 1920 pt-BR installer fits
+PASS 1920 pt-BR storage-page fits
+PASS 1920 pt-BR diagnostics fits
+PASS 1920 pt-BR settings fits
+PASS 1920 pt-BR removed controls absent
+PASS 1920 pt-BR settings grouped
+PASS 1920 pt-PT one image filter
+PASS 1920 pt-PT language has flag
+PASS 1920 pt-PT locale selected
+PASS 1920 pt-PT dashboard fits
+PASS 1920 pt-PT library fits
+PASS 1920 pt-PT installer fits
+PASS 1920 pt-PT storage-page fits
+PASS 1920 pt-PT diagnostics fits
+PASS 1920 pt-PT settings fits
+PASS 1920 pt-PT removed controls absent
+PASS 1920 pt-PT settings grouped
+PASS 1920 ro one image filter
+PASS 1920 ro language has flag
+PASS 1920 ro locale selected
+PASS 1920 ro dashboard fits
+PASS 1920 ro library fits
+PASS 1920 ro installer fits
+PASS 1920 ro storage-page fits
+PASS 1920 ro diagnostics fits
+PASS 1920 ro settings fits
+PASS 1920 ro removed controls absent
+PASS 1920 ro settings grouped
+PASS 1920 ru one image filter
+PASS 1920 ru language has flag
+PASS 1920 ru locale selected
+PASS 1920 ru dashboard fits
+PASS 1920 ru library fits
+PASS 1920 ru installer fits
+PASS 1920 ru storage-page fits
+PASS 1920 ru diagnostics fits
+PASS 1920 ru settings fits
+PASS 1920 ru removed controls absent
+PASS 1920 ru settings grouped
+PASS 1920 es-419 one image filter
+PASS 1920 es-419 language has flag
+PASS 1920 es-419 locale selected
+PASS 1920 es-419 dashboard fits
+PASS 1920 es-419 library fits
+PASS 1920 es-419 installer fits
+PASS 1920 es-419 storage-page fits
+PASS 1920 es-419 diagnostics fits
+PASS 1920 es-419 settings fits
+PASS 1920 es-419 removed controls absent
+PASS 1920 es-419 settings grouped
+PASS 1920 es-ES one image filter
+PASS 1920 es-ES language has flag
+PASS 1920 es-ES locale selected
+PASS 1920 es-ES dashboard fits
+PASS 1920 es-ES library fits
+PASS 1920 es-ES installer fits
+PASS 1920 es-ES storage-page fits
+PASS 1920 es-ES diagnostics fits
+PASS 1920 es-ES settings fits
+PASS 1920 es-ES removed controls absent
+PASS 1920 es-ES settings grouped
+PASS 1920 sv one image filter
+PASS 1920 sv language has flag
+PASS 1920 sv locale selected
+PASS 1920 sv dashboard fits
+PASS 1920 sv library fits
+PASS 1920 sv installer fits
+PASS 1920 sv storage-page fits
+PASS 1920 sv diagnostics fits
+PASS 1920 sv settings fits
+PASS 1920 sv removed controls absent
+PASS 1920 sv settings grouped
+PASS 1920 th one image filter
+PASS 1920 th language has flag
+PASS 1920 th locale selected
+PASS 1920 th dashboard fits
+PASS 1920 th library fits
+PASS 1920 th installer fits
+PASS 1920 th storage-page fits
+PASS 1920 th diagnostics fits
+PASS 1920 th settings fits
+PASS 1920 th removed controls absent
+PASS 1920 th settings grouped
+PASS 1920 tr one image filter
+PASS 1920 tr language has flag
+PASS 1920 tr locale selected
+PASS 1920 tr dashboard fits
+PASS 1920 tr library fits
+PASS 1920 tr installer fits
+PASS 1920 tr storage-page fits
+PASS 1920 tr diagnostics fits
+PASS 1920 tr settings fits
+PASS 1920 tr removed controls absent
+PASS 1920 tr settings grouped
+PASS 1920 uk one image filter
+PASS 1920 uk language has flag
+PASS 1920 uk locale selected
+PASS 1920 uk dashboard fits
+PASS 1920 uk library fits
+PASS 1920 uk installer fits
+PASS 1920 uk storage-page fits
+PASS 1920 uk diagnostics fits
+PASS 1920 uk settings fits
+PASS 1920 uk removed controls absent
+PASS 1920 uk settings grouped
+PASS 1920 vi one image filter
+PASS 1920 vi language has flag
+PASS 1920 vi locale selected
+PASS 1920 vi dashboard fits
+PASS 1920 vi library fits
+PASS 1920 vi installer fits
+PASS 1920 vi storage-page fits
+PASS 1920 vi diagnostics fits
+PASS 1920 vi settings fits
+PASS 1920 vi removed controls absent
+PASS 1920 vi settings grouped
+PASS 1920 values loaded
+PASS 1920 unsaved values retained
+PASS 1920 klog literal text
+PASS 1920 klog error handled
+PASS 1920 native controls retained
+PASS 1920 delete confirmed
+PASS 390 ar one image filter
+PASS 390 ar language has flag
+PASS 390 ar locale selected
+PASS 390 ar dashboard fits
+PASS 390 ar library fits
+PASS 390 ar installer fits
+PASS 390 ar storage-page fits
+PASS 390 ar diagnostics fits
+PASS 390 ar settings fits
+PASS 390 ar removed controls absent
+PASS 390 ar settings grouped
+PASS 390 zh-CN one image filter
+PASS 390 zh-CN language has flag
+PASS 390 zh-CN locale selected
+PASS 390 zh-CN dashboard fits
+PASS 390 zh-CN library fits
+PASS 390 zh-CN installer fits
+PASS 390 zh-CN storage-page fits
+PASS 390 zh-CN diagnostics fits
+PASS 390 zh-CN settings fits
+PASS 390 zh-CN removed controls absent
+PASS 390 zh-CN settings grouped
+PASS 390 zh-TW one image filter
+PASS 390 zh-TW language has flag
+PASS 390 zh-TW locale selected
+PASS 390 zh-TW dashboard fits
+PASS 390 zh-TW library fits
+PASS 390 zh-TW installer fits
+PASS 390 zh-TW storage-page fits
+PASS 390 zh-TW diagnostics fits
+PASS 390 zh-TW settings fits
+PASS 390 zh-TW removed controls absent
+PASS 390 zh-TW settings grouped
+PASS 390 cs one image filter
+PASS 390 cs language has flag
+PASS 390 cs locale selected
+PASS 390 cs dashboard fits
+PASS 390 cs library fits
+PASS 390 cs installer fits
+PASS 390 cs storage-page fits
+PASS 390 cs diagnostics fits
+PASS 390 cs settings fits
+PASS 390 cs removed controls absent
+PASS 390 cs settings grouped
+PASS 390 da one image filter
+PASS 390 da language has flag
+PASS 390 da locale selected
+PASS 390 da dashboard fits
+PASS 390 da library fits
+PASS 390 da installer fits
+PASS 390 da storage-page fits
+PASS 390 da diagnostics fits
+PASS 390 da settings fits
+PASS 390 da removed controls absent
+PASS 390 da settings grouped
+PASS 390 nl one image filter
+PASS 390 nl language has flag
+PASS 390 nl locale selected
+PASS 390 nl dashboard fits
+PASS 390 nl library fits
+PASS 390 nl installer fits
+PASS 390 nl storage-page fits
+PASS 390 nl diagnostics fits
+PASS 390 nl settings fits
+PASS 390 nl removed controls absent
+PASS 390 nl settings grouped
+PASS 390 en-GB one image filter
+PASS 390 en-GB language has flag
+PASS 390 en-GB locale selected
+PASS 390 en-GB dashboard fits
+PASS 390 en-GB library fits
+PASS 390 en-GB installer fits
+PASS 390 en-GB storage-page fits
+PASS 390 en-GB diagnostics fits
+PASS 390 en-GB settings fits
+PASS 390 en-GB removed controls absent
+PASS 390 en-GB settings grouped
+PASS 390 en-US one image filter
+PASS 390 en-US language has flag
+PASS 390 en-US locale selected
+PASS 390 en-US dashboard fits
+PASS 390 en-US library fits
+PASS 390 en-US installer fits
+PASS 390 en-US storage-page fits
+PASS 390 en-US diagnostics fits
+PASS 390 en-US settings fits
+PASS 390 en-US removed controls absent
+PASS 390 en-US settings grouped
+PASS 390 fi one image filter
+PASS 390 fi language has flag
+PASS 390 fi locale selected
+PASS 390 fi dashboard fits
+PASS 390 fi library fits
+PASS 390 fi installer fits
+PASS 390 fi storage-page fits
+PASS 390 fi diagnostics fits
+PASS 390 fi settings fits
+PASS 390 fi removed controls absent
+PASS 390 fi settings grouped
+PASS 390 fr-CA one image filter
+PASS 390 fr-CA language has flag
+PASS 390 fr-CA locale selected
+PASS 390 fr-CA dashboard fits
+PASS 390 fr-CA library fits
+PASS 390 fr-CA installer fits
+PASS 390 fr-CA storage-page fits
+PASS 390 fr-CA diagnostics fits
+PASS 390 fr-CA settings fits
+PASS 390 fr-CA removed controls absent
+PASS 390 fr-CA settings grouped
+PASS 390 fr-FR one image filter
+PASS 390 fr-FR language has flag
+PASS 390 fr-FR locale selected
+PASS 390 fr-FR dashboard fits
+PASS 390 fr-FR library fits
+PASS 390 fr-FR installer fits
+PASS 390 fr-FR storage-page fits
+PASS 390 fr-FR diagnostics fits
+PASS 390 fr-FR settings fits
+PASS 390 fr-FR removed controls absent
+PASS 390 fr-FR settings grouped
+PASS 390 de one image filter
+PASS 390 de language has flag
+PASS 390 de locale selected
+PASS 390 de dashboard fits
+PASS 390 de library fits
+PASS 390 de installer fits
+PASS 390 de storage-page fits
+PASS 390 de diagnostics fits
+PASS 390 de settings fits
+PASS 390 de removed controls absent
+PASS 390 de settings grouped
+PASS 390 el one image filter
+PASS 390 el language has flag
+PASS 390 el locale selected
+PASS 390 el dashboard fits
+PASS 390 el library fits
+PASS 390 el installer fits
+PASS 390 el storage-page fits
+PASS 390 el diagnostics fits
+PASS 390 el settings fits
+PASS 390 el removed controls absent
+PASS 390 el settings grouped
+PASS 390 hu one image filter
+PASS 390 hu language has flag
+PASS 390 hu locale selected
+PASS 390 hu dashboard fits
+PASS 390 hu library fits
+PASS 390 hu installer fits
+PASS 390 hu storage-page fits
+PASS 390 hu diagnostics fits
+PASS 390 hu settings fits
+PASS 390 hu removed controls absent
+PASS 390 hu settings grouped
+PASS 390 id one image filter
+PASS 390 id language has flag
+PASS 390 id locale selected
+PASS 390 id dashboard fits
+PASS 390 id library fits
+PASS 390 id installer fits
+PASS 390 id storage-page fits
+PASS 390 id diagnostics fits
+PASS 390 id settings fits
+PASS 390 id removed controls absent
+PASS 390 id settings grouped
+PASS 390 it one image filter
+PASS 390 it language has flag
+PASS 390 it locale selected
+PASS 390 it dashboard fits
+PASS 390 it library fits
+PASS 390 it installer fits
+PASS 390 it storage-page fits
+PASS 390 it diagnostics fits
+PASS 390 it settings fits
+PASS 390 it removed controls absent
+PASS 390 it settings grouped
+PASS 390 ja one image filter
+PASS 390 ja language has flag
+PASS 390 ja locale selected
+PASS 390 ja dashboard fits
+PASS 390 ja library fits
+PASS 390 ja installer fits
+PASS 390 ja storage-page fits
+PASS 390 ja diagnostics fits
+PASS 390 ja settings fits
+PASS 390 ja removed controls absent
+PASS 390 ja settings grouped
+PASS 390 ko one image filter
+PASS 390 ko language has flag
+PASS 390 ko locale selected
+PASS 390 ko dashboard fits
+PASS 390 ko library fits
+PASS 390 ko installer fits
+PASS 390 ko storage-page fits
+PASS 390 ko diagnostics fits
+PASS 390 ko settings fits
+PASS 390 ko removed controls absent
+PASS 390 ko settings grouped
+PASS 390 nb one image filter
+PASS 390 nb language has flag
+PASS 390 nb locale selected
+PASS 390 nb dashboard fits
+PASS 390 nb library fits
+PASS 390 nb installer fits
+PASS 390 nb storage-page fits
+PASS 390 nb diagnostics fits
+PASS 390 nb settings fits
+PASS 390 nb removed controls absent
+PASS 390 nb settings grouped
+PASS 390 pl one image filter
+PASS 390 pl language has flag
+PASS 390 pl locale selected
+PASS 390 pl dashboard fits
+PASS 390 pl library fits
+PASS 390 pl installer fits
+PASS 390 pl storage-page fits
+PASS 390 pl diagnostics fits
+PASS 390 pl settings fits
+PASS 390 pl removed controls absent
+PASS 390 pl settings grouped
+PASS 390 pt-BR one image filter
+PASS 390 pt-BR language has flag
+PASS 390 pt-BR locale selected
+PASS 390 pt-BR dashboard fits
+PASS 390 pt-BR library fits
+PASS 390 pt-BR installer fits
+PASS 390 pt-BR storage-page fits
+PASS 390 pt-BR diagnostics fits
+PASS 390 pt-BR settings fits
+PASS 390 pt-BR removed controls absent
+PASS 390 pt-BR settings grouped
+PASS 390 pt-PT one image filter
+PASS 390 pt-PT language has flag
+PASS 390 pt-PT locale selected
+PASS 390 pt-PT dashboard fits
+PASS 390 pt-PT library fits
+PASS 390 pt-PT installer fits
+PASS 390 pt-PT storage-page fits
+PASS 390 pt-PT diagnostics fits
+PASS 390 pt-PT settings fits
+PASS 390 pt-PT removed controls absent
+PASS 390 pt-PT settings grouped
+PASS 390 ro one image filter
+PASS 390 ro language has flag
+PASS 390 ro locale selected
+PASS 390 ro dashboard fits
+PASS 390 ro library fits
+PASS 390 ro installer fits
+PASS 390 ro storage-page fits
+PASS 390 ro diagnostics fits
+PASS 390 ro settings fits
+PASS 390 ro removed controls absent
+PASS 390 ro settings grouped
+PASS 390 ru one image filter
+PASS 390 ru language has flag
+PASS 390 ru locale selected
+PASS 390 ru dashboard fits
+PASS 390 ru library fits
+PASS 390 ru installer fits
+PASS 390 ru storage-page fits
+PASS 390 ru diagnostics fits
+PASS 390 ru settings fits
+PASS 390 ru removed controls absent
+PASS 390 ru settings grouped
+PASS 390 es-419 one image filter
+PASS 390 es-419 language has flag
+PASS 390 es-419 locale selected
+PASS 390 es-419 dashboard fits
+PASS 390 es-419 library fits
+PASS 390 es-419 installer fits
+PASS 390 es-419 storage-page fits
+PASS 390 es-419 diagnostics fits
+PASS 390 es-419 settings fits
+PASS 390 es-419 removed controls absent
+PASS 390 es-419 settings grouped
+PASS 390 es-ES one image filter
+PASS 390 es-ES language has flag
+PASS 390 es-ES locale selected
+PASS 390 es-ES dashboard fits
+PASS 390 es-ES library fits
+PASS 390 es-ES installer fits
+PASS 390 es-ES storage-page fits
+PASS 390 es-ES diagnostics fits
+PASS 390 es-ES settings fits
+PASS 390 es-ES removed controls absent
+PASS 390 es-ES settings grouped
+PASS 390 sv one image filter
+PASS 390 sv language has flag
+PASS 390 sv locale selected
+PASS 390 sv dashboard fits
+PASS 390 sv library fits
+PASS 390 sv installer fits
+PASS 390 sv storage-page fits
+PASS 390 sv diagnostics fits
+PASS 390 sv settings fits
+PASS 390 sv removed controls absent
+PASS 390 sv settings grouped
+PASS 390 th one image filter
+PASS 390 th language has flag
+PASS 390 th locale selected
+PASS 390 th dashboard fits
+PASS 390 th library fits
+PASS 390 th installer fits
+PASS 390 th storage-page fits
+PASS 390 th diagnostics fits
+PASS 390 th settings fits
+PASS 390 th removed controls absent
+PASS 390 th settings grouped
+PASS 390 tr one image filter
+PASS 390 tr language has flag
+PASS 390 tr locale selected
+PASS 390 tr dashboard fits
+PASS 390 tr library fits
+PASS 390 tr installer fits
+PASS 390 tr storage-page fits
+PASS 390 tr diagnostics fits
+PASS 390 tr settings fits
+PASS 390 tr removed controls absent
+PASS 390 tr settings grouped
+PASS 390 uk one image filter
+PASS 390 uk language has flag
+PASS 390 uk locale selected
+PASS 390 uk dashboard fits
+PASS 390 uk library fits
+PASS 390 uk installer fits
+PASS 390 uk storage-page fits
+PASS 390 uk diagnostics fits
+PASS 390 uk settings fits
+PASS 390 uk removed controls absent
+PASS 390 uk settings grouped
+PASS 390 vi one image filter
+PASS 390 vi language has flag
+PASS 390 vi locale selected
+PASS 390 vi dashboard fits
+PASS 390 vi library fits
+PASS 390 vi installer fits
+PASS 390 vi storage-page fits
+PASS 390 vi diagnostics fits
+PASS 390 vi settings fits
+PASS 390 vi removed controls absent
+PASS 390 vi settings grouped
+PASS 390 values loaded
+PASS 390 unsaved values retained
+PASS 390 klog literal text
+PASS 390 klog error handled
+PASS 390 native controls retained
+PASS 390 delete confirmed
+PASS mixed image formats all remain accessible
+PASS legacy exfat filter maps to unified images
+PASS shoulder navigation skips removed duplicate
+PASS drive cards rendered
+PASS latest browse request wins
+PASS breadcrumbs allow returning to the drive
+PASS cancel connection failure is visible
+PASS console address uses current host and port
+PASS firmware comes from service snapshot
+PASS used and free storage are computed consistently
+PASS missing storage stays unknown
+PASS about has real endpoint and attribution
+PASS utility dialog is centered within the viewport
+PASS about closes and restores focus
+PASS notifications derive from real current errors
+PASS payload CPU over 100 percent retained with explicit scope
+PASS re-renders do not add duplicate samples
+PASS unavailable measurements break chart segments
+PASS console restart clears prior samples
+PASS offline marks last data stale
+PASS read-only diagnostics save a real warning result
+PASS offline diagnostics fail honestly
+PASS CSV cells defend formulas quotes and commas
+PASS reports contain actual snapshots and browser-only metadata
+PASS JSON download contains valid console snapshot
+PASS PDF uses a printable real snapshot
+PASS unavailable CPU is labeled unavailable
+PASS view all opens the actual payload log
+PASS temperature GPU and I/O are not fabricated
+PASS no unintended mutations
+PASS no JS exceptions
+{"errors":[],"posts":["/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse","/api/installer/browse"]}

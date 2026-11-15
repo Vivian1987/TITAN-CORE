@@ -37,4 +37,5 @@ class Handler(BaseHTTPRequestHandler):
    self.send_response(200);self.end_headers();self.wfile.write(b'{}');return
   self.send_response(409);self.end_headers()
  def log_message(self,*args):pass
-HTTPServer(('127.0.0.1',8765),Handler).serve_forever()
+if __name__ == '__main__':
+ HTTPServer(('127.0.0.1',8765),Handler).serve_forever()

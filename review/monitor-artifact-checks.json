@@ -1,0 +1,55 @@
+{
+  "version": "0.5.3-beta.1",
+  "elf_sha256": "4b4dcad7d8cc1807a7de59cde5eae220866b6e1f95249f9410f8da8aa3ad5b8f",
+  "stage1": {
+    "sha256": "e7578be0a8a59d2d7eaf6c3fa7a0b6a94fc02042bf473949e4f9ab323e7a18f1",
+    "embedded": true
+  },
+  "ui": {
+    "sha256": "963275f0cfc26b9558b6073bfaeccbed56f997e62639d775f4f63c01d968ca27",
+    "embedded": true
+  },
+  "icon": {
+    "sha256": "874fe895fcf2e5f6c531eb1e63115ca25b6c77f738d9cc5140c91a555661fe75",
+    "embedded": true
+  },
+  "runtime": {
+    "sha256": "f942fa25f5558481b703dd30f92fa1096ae13288b81e8fdbe4cdc0dbbe822ac1",
+    "embedded": true
+  },
+  "kstuff": {
+    "sha256": "ab9a6cb4d3b1daf139d4d646e402b1cf569071acd64599c936d7a3a6164dc779",
+    "embedded": true
+  },
+  "shadowmount": {
+    "sha256": "8c6798232ae2a8fbcd209ab97fc4f8d4d47cf23b7eecfaa6349c0bfeb8e4a3d3",
+    "embedded": true
+  },
+  "backend_sources_identical_to_0_5_2": {
+    "src/telemetry.rs": true,
+    "src/cache.rs": true,
+    "src/background.rs": true,
+    "src/ampr_index.rs": true,
+    "src/library.rs": true,
+    "src/config.rs": true,
+    "src/register.rs": true,
+    "src/installer_io.rs": true,
+    "src/web.rs": true,
+    "src/relocation.rs": true,
+    "src/backup.rs": true,
+    "src/sys.rs": true,
+    "src/installed.rs": true,
+    "src/migration.rs": true,
+    "src/main.rs": true,
+    "src/stack_policy.rs": true,
+    "src/storage.rs": true,
+    "src/stack.rs": true,
+    "src/scan.rs": true,
+    "src/installer.rs": true,
+    "src/launch.rs": true,
+    "src/telemetry_math.rs": true,
+    "src/engine_mode.rs": true,
+    "src/bg.jpg": true
+  },
+  "pinned_payloads_unchanged": true
+}
