@@ -28,3 +28,5 @@ mod scan {
 #[path = "../../../src/installer_io.rs"] mod installer_io;
 
 #[path = "../../../src/background.rs"] mod background;
+
+#[path = "../../../src/installed_access.rs"] mod installed_access;
