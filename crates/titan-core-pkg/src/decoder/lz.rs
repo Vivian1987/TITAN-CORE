@@ -1,4 +1,4 @@
-//! Bit streams, arrays and the LZ half decoder (`kraken.rs` decoder section).
+//! Bit streams, arrays and the LZ half decoder. Source attribution: see CREDITS.md.
 
 use core::hint::select_unpredictable;
 use core::ops::Range;
@@ -116,7 +116,7 @@ impl<'a> Msb<'a> {
         // At least 56 valid bits, so the first 13 are real, as in the original's 24-bit window.
         let zeros = self.acc.leading_zeros();
         if zeros > 12 {
-            return err("kraken: bad length code");
+            return err("package decoder: bad length code");
         }
         self.get(zeros);
         Ok(self.get(zeros + 7) - 64)
@@ -168,7 +168,7 @@ pub(crate) fn get_array(
     lut: &mut [u16; huff::LUT],
 ) -> Result<(Arr, usize), Error> {
     if end < at + 2 {
-        return err("kraken: truncated array");
+        return err("package decoder: truncated array");
     }
     let b0 = src[at];
     match (b0 >> 4) & 7 {
@@ -177,30 +177,30 @@ pub(crate) fn get_array(
                 ((((b0 as usize) << 8) | src[at + 1] as usize) & 0xFFF, 2)
             } else {
                 if end < at + 3 {
-                    return err("kraken: truncated array");
+                    return err("package decoder: truncated array");
                 }
                 let n = ((b0 as usize) << 16) | ((src[at + 1] as usize) << 8) | src[at + 2] as usize;
                 if n & !0x3FFFF != 0 {
-                    return err("kraken: bad array size");
+                    return err("package decoder: bad array size");
                 }
                 (n, 3)
             };
             if n > max || at + h + n > end {
-                return err("kraken: array overruns its chunk");
+                return err("package decoder: array overruns its chunk");
             }
             Ok((Arr::Src(at + h..at + h + n), h + n))
         }
         2 => {
             let (src_size, dst_size, h) = if b0 >= 0x80 {
                 if end < at + 3 {
-                    return err("kraken: truncated array");
+                    return err("package decoder: truncated array");
                 }
                 let v = (usize::from(b0) << 16) | (usize::from(src[at + 1]) << 8) | usize::from(src[at + 2]);
                 let s = v & 0x3FF;
                 (s, s + ((v >> 10) & 0x3FF) + 1, 3)
             } else {
                 if end < at + 5 {
-                    return err("kraken: truncated array");
+                    return err("package decoder: truncated array");
                 }
                 let v = u32::from_be_bytes([src[at + 1], src[at + 2], src[at + 3], src[at + 4]]) as usize;
                 let s = v & 0x3FFFF;
@@ -208,16 +208,16 @@ pub(crate) fn get_array(
                 (s, d, 5)
             };
             if src_size >= dst_size || dst_size > max || at + h + src_size > end {
-                return err("kraken: bad Huffman array size");
+                return err("package decoder: bad Huffman array size");
             }
             // Only a stream the original refuses anyway is larger than its scratch region.
             if dst_size > out.len() {
-                return err("kraken: array larger than a valid half allows");
+                return err("package decoder: array larger than a valid half allows");
             }
             huff::decode(&src[at + h..at + h + src_size], &mut out[..dst_size], lut)?;
             Ok((Arr::Buf(dst_size), h + src_size))
         }
-        _ => err("kraken: unsupported array type"),
+        _ => err("package decoder: unsupported array type"),
     }
 }
 
@@ -395,12 +395,12 @@ fn offset(scaled: bool, c: u8, r: &mut Msb) -> Result<u32, Error> {
     if scaled {
         let nb = u32::from(c >> 3);
         if nb > 26 {
-            return err("kraken: bad offset code");
+            return err("package decoder: bad offset code");
         }
         Ok((((8 + u32::from(c & 7)) << nb) | r.take(nb)) - 8)
     } else {
         if c >= 0xF0 {
-            return err("kraken: offset beyond a block");
+            return err("package decoder: offset beyond a block");
         }
         let n = u32::from(c >> 4) + 4;
         Ok((((1u32 << n) | r.take(n)) << 4) + u32::from(c & 0xF) - 248)
@@ -462,7 +462,7 @@ struct Lengths<'a> {
 impl Lengths<'_> {
     #[inline(always)]
     fn next(&mut self) -> Result<usize, Error> {
-        let Some(&v) = self.lens.get(self.k) else { return err("kraken: length missing") };
+        let Some(&v) = self.lens.get(self.k) else { return err("package decoder: length missing") };
         self.k += 1;
         if v != 255 {
             return Ok(3 + v as usize);
@@ -577,7 +577,7 @@ fn commands<const DELTA: bool>(
             lit
         } else {
             if lit_at + lit > lits.len() || dst + lit > end {
-                return err("kraken: literal run overruns");
+                return err("package decoder: literal run overruns");
             }
             // SAFETY: checked above: `lit_at + lit <= lits.len()`, `dst + lit <= end`; `end <=
             // out.len()` (caller) and `8 <= r0 <= dst` (every match checks its distance).
@@ -612,9 +612,9 @@ fn commands<const DELTA: bool>(
         }
         if dist < MIN_DISTANCE || dist > dst || dst + mlen > end {
             if kind == 3 && offs.missing {
-                return err("kraken: offset missing");
+                return err("package decoder: offset missing");
             }
-            return err("kraken: match out of bounds");
+            return err("package decoder: match out of bounds");
         }
         if mlen <= 32 && dst + 32 <= end {
             // Four 8-byte chunks whatever the length, so there is no branch on it: chunk k
@@ -655,24 +655,24 @@ fn commands<const DELTA: bool>(
 pub(crate) fn decode_half(src: &[u8], out: &mut [u8], at: usize, len: usize, delta: bool, s: &mut Scratch) -> Result<(), Error> {
     let end = at + len;
     if end > out.len() {
-        return err("kraken: half overruns the block");
+        return err("package decoder: half overruns the block");
     }
     let mut p = 0usize;
     let mut dst = at;
     if at == 0 {
         if src.len() < SEED || len < SEED {
-            return err("kraken: truncated seed");
+            return err("package decoder: truncated seed");
         }
         out[..SEED].copy_from_slice(&src[..SEED]);
         p = SEED;
         dst = SEED;
     }
     if src.len() < p + 13 {
-        return err("kraken: chunk too short");
+        return err("package decoder: chunk too short");
     }
     let flag = src[p];
     if flag & 0xC0 != 0x80 {
-        return err("kraken: expected the excess framing");
+        return err("package decoder: expected the excess framing");
     }
     p += 1;
     let mut excess = (flag & 0x3F) as usize;
@@ -681,7 +681,7 @@ pub(crate) fn decode_half(src: &[u8], out: &mut [u8], at: usize, len: usize, del
         p += 1;
     }
     if excess > src.len() - p {
-        return err("kraken: excess overruns the chunk");
+        return err("package decoder: excess overruns the chunk");
     }
     let main_end = src.len() - excess;
     let Scratch { a, b, lut } = s;
@@ -690,7 +690,7 @@ pub(crate) fn decode_half(src: &[u8], out: &mut [u8], at: usize, len: usize, del
     let (cmds, n) = timed!(1, 0, get_array(src, p, main_end, len, &mut a[lits.taken()..], lut))?;
     p += n;
     if p >= main_end {
-        return err("kraken: truncated offsets");
+        return err("package decoder: truncated offsets");
     }
     // `0x80` marks the scaled offset code; anything else starts the traditional offsets array.
     let scaled = src[p] == 0x80;
@@ -745,18 +745,18 @@ pub(crate) fn decode_half(src: &[u8], out: &mut [u8], at: usize, len: usize, del
     #[cfg(feature = "phase_timing")]
     let t0 = crate::decoder::timing::phase::now();
     if lits.len() - lit_at != end - dst {
-        return err("kraken: trailing literals do not fill the half");
+        return err("package decoder: trailing literals do not fill the half");
     }
     // SAFETY: `lits.len() - lit_at == end - dst`, just checked; `recent[0]` as in the loop.
     unsafe { put_literals(op, dst, end, lits, lit_at, end - dst, delta, recent[0]) };
     if offs.used() != offs.codes.len() || lens.k != lens.lens.len() {
-        return err("kraken: unused offsets or lengths");
+        return err("package decoder: unused offsets or lengths");
     }
     if offs.a.seam() != offs.b.seam() {
-        return err("kraken: offset streams do not meet");
+        return err("package decoder: offset streams do not meet");
     }
     if lens.ea.seam() != lens.eb.seam() {
-        return err("kraken: excess streams do not meet");
+        return err("package decoder: excess streams do not meet");
     }
     #[cfg(feature = "phase_timing")]
     crate::decoder::timing::phase::add(6, t0, 0);

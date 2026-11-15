@@ -1,9 +1,7 @@
-//! Decoder for the Kraken blocks of a PS5 package's inner image (`pfs_image.dat`), `no_std` and
+//! Decoder for the package blocks of a PS5 package's inner image (`pfs_image.dat`), `no_std` and
 //! allocation-free: every buffer comes from a caller-provided [`Scratch`].
 //!
-//! Port of the Kraken decoder vendored in ps5-dump-forge (GPL-3.0-or-later): `kraken.rs` (BitReader,
-//! get_array, put_literals, copy_match, decode_half, decode_entropy_half, decode_parts),
-//! `kraken/huff.rs` (get_gamma, LsbReader, decode) and `kraken_image.rs::decode_described`.
+//! Ported upstream decoder source and license attribution: see CREDITS.md.
 //! Differences: raw arrays are borrowed from `src` instead of copied, and the offsets and
 //! length escapes are read from their bit streams as the commands need them instead of into
 //! vectors first. Both accept and refuse exactly the streams the original does.
@@ -110,7 +108,7 @@ impl Default for Scratch {
 pub fn decode_block(src: &[u8], desc: Desc, dst: &mut [u8], scratch: &mut Scratch) -> Result<usize, Error> {
     let len = dst.len();
     if len == 0 || len > BLOCK {
-        return err("a block of this length is not a Kraken block");
+        return err("a block of this length is not a package block");
     }
     if src.is_empty() {
         if desc != Desc::default() {
@@ -121,7 +119,7 @@ pub fn decode_block(src: &[u8], desc: Desc, dst: &mut [u8], scratch: &mut Scratc
     }
     let even_len = desc.even_len as usize;
     if src.len() > 2 * BLOCK || even_len > src.len() {
-        return err("a block's stored span is not a Kraken block");
+        return err("a block's stored span is not a package block");
     }
     let (e, o) = src.split_at(even_len);
     let even_logical = len.min(HALF);
@@ -129,7 +127,7 @@ pub fn decode_block(src: &[u8], desc: Desc, dst: &mut [u8], scratch: &mut Scratc
     if len > HALF {
         half(o, dst, HALF, len - HALF, desc.odd_lz(), desc.mode & 0b1000 != 0, scratch)?;
     } else if !o.is_empty() {
-        return err("kraken: unexpected odd half");
+        return err("package decoder: unexpected odd half");
     }
     Ok(len)
 }
@@ -152,7 +150,7 @@ fn raw_or_entropy(src: &[u8], dst: &mut [u8], at: usize, len: usize, s: &mut Scr
         let out = &mut dst[at..at + len];
         let (arr, used) = lz::get_array(src, 0, src.len(), len, out, &mut s.lut)?;
         if used != src.len() || arr.len() != len {
-            return err("kraken: entropy half has the wrong length or trailing bytes");
+            return err("package decoder: entropy half has the wrong length or trailing bytes");
         }
         if let lz::Arr::Src(r) = arr {
             out.copy_from_slice(&src[r]);

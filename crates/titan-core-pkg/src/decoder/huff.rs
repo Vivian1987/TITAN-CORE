@@ -1,4 +1,4 @@
-//! Kraken's Huffman-coded arrays (array type 2), decode side (`kraken/huff.rs:261-462`).
+//! Huffman-coded arrays (array type 2). Source attribution: see CREDITS.md.
 //! Codes are canonical, lengths 1..=11, and must fill the 2048-entry table exactly. The body is
 //! the code-length table, a LE16 split, then streams A | C | B-reversed (symbol i from i % 3).
 
@@ -13,7 +13,7 @@ pub(crate) const LUT: usize = 1 << MAX_LEN;
 fn get_gamma(r: &mut Msb) -> Result<usize, Error> {
     let lz = r.zeros();
     if lz > 7 {
-        return err("kraken: bad Huffman table run");
+        return err("package decoder: bad Huffman table run");
     }
     Ok(r.get(2 * (lz + 1)) as usize - 1)
 }
@@ -121,7 +121,7 @@ impl<'a, const BACK: bool> LsbReader<'a, BACK> {
 pub(crate) fn decode(src: &[u8], out: &mut [u8], lut: &mut [u16; LUT]) -> Result<(), Error> {
     let mut r = Msb::new(src, 0, src.len(), false);
     if r.get(1) != 0 {
-        return err("kraken: unsupported Huffman table form");
+        return err("package decoder: unsupported Huffman table form");
     }
     // (symbol, code length) in table order; at most 256 (new form) or 255 (old form) entries.
     let mut syms = [(0u8, 0u8); 256];
@@ -142,13 +142,13 @@ pub(crate) fn decode(src: &[u8], out: &mut [u8], lut: &mut [u16; LUT]) -> Result
             }
             let run = get_gamma(&mut r)?;
             if sym + run > 256 {
-                return err("kraken: Huffman table overruns");
+                return err("package decoder: Huffman table overruns");
             }
             for _ in 0..run {
                 // `limit <= 20`: a 24-bit window of zeros and a 56-bit one both exceed it.
                 let lz = r.zeros();
                 if lz > limit {
-                    return err("kraken: bad Huffman code length");
+                    return err("package decoder: bad Huffman code length");
                 }
                 // The `lz` zeros, the 1 and `fb` bits in one read (`lz + 1 + fb <= 24` of the
                 // 56 bits `zeros` made valid): the value is `lz << fb | low fb bits`.
@@ -156,7 +156,7 @@ pub(crate) fn decode(src: &[u8], out: &mut [u8], lut: &mut [u16; LUT]) -> Result
                 let v = (lz << fb | (w & ((1 << fb) - 1))) as i32;
                 let l = (-(v & 1) ^ (v >> 1)) + ((avg + 2) >> 2);
                 if !(1..=MAX_LEN as i32).contains(&l) {
-                    return err("kraken: bad Huffman code length");
+                    return err("package decoder: bad Huffman code length");
                 }
                 avg = l + ((3 * avg + 2) >> 2);
                 syms[count] = (sym as u8, l as u8);
@@ -165,30 +165,30 @@ pub(crate) fn decode(src: &[u8], out: &mut [u8], lut: &mut [u16; LUT]) -> Result
             }
         }
         if sym != 256 || count < 2 {
-            return err("kraken: bad Huffman table");
+            return err("package decoder: bad Huffman table");
         }
     } else {
         let n = r.get(8) as usize;
         if n == 0 {
-            return err("kraken: empty Huffman table");
+            return err("package decoder: empty Huffman table");
         }
         if n == 1 {
             let symbol = r.get(8) as u8;
             if r.seam() != src.len() as isize {
-                return err("kraken: single-symbol Huffman table has the wrong size");
+                return err("package decoder: single-symbol Huffman table has the wrong size");
             }
             out.fill(symbol);
             return Ok(());
         }
         let cb = r.get(3);
         if cb > 4 {
-            return err("kraken: bad Huffman table");
+            return err("package decoder: bad Huffman table");
         }
         for _ in 0..n {
             let s = r.get(8) as u8;
             let l = r.get(cb) as usize + 1;
             if l > MAX_LEN as usize {
-                return err("kraken: bad Huffman code length");
+                return err("package decoder: bad Huffman code length");
             }
             syms[count] = (s, l as u8);
             count += 1;
@@ -229,7 +229,7 @@ fn build_lut(syms: &[(u8, u8)], lut: &mut [u16; LUT]) -> Result<(), Error> {
         let l32 = u32::from(l);
         let step = 1usize << (bits - l32);
         if slot + step > size {
-            return err("kraken: oversubscribed Huffman code");
+            return err("package decoder: oversubscribed Huffman code");
         }
         while cur < l32 {
             let h = 1usize << cur;
@@ -242,7 +242,7 @@ fn build_lut(syms: &[(u8, u8)], lut: &mut [u16; LUT]) -> Result<(), Error> {
         slot += step;
     }
     if slot != size {
-        return err("kraken: incomplete Huffman code");
+        return err("package decoder: incomplete Huffman code");
     }
     // Repeat the 2^bits slots up to the whole table, so the decoder masks with a constant.
     while cur < MAX_LEN {
@@ -312,12 +312,12 @@ type Readers<'a> = (usize, usize, LsbReader<'a, false>, LsbReader<'a, true>, Lsb
 #[inline(always)]
 fn readers(src: &[u8], start: usize) -> Result<Readers<'_>, Error> {
     if start + 3 > src.len() {
-        return err("kraken: truncated Huffman array");
+        return err("package decoder: truncated Huffman array");
     }
     let split = usize::from(u16::from_le_bytes([src[start], src[start + 1]]));
     let a0 = start + 2;
     if a0 + split > src.len() {
-        return err("kraken: bad Huffman split");
+        return err("package decoder: bad Huffman split");
     }
     Ok((
         split,
@@ -331,7 +331,7 @@ fn readers(src: &[u8], start: usize) -> Result<Readers<'_>, Error> {
 /// The streams used exactly their bytes.
 fn meet(src: &[u8], split: usize, a0: usize, a: &LsbReader<false>, b: &LsbReader<true>, c: &LsbReader<false>) -> Result<(), Error> {
     if a.bytes_used() != split || b.bytes_used() + c.bytes_used() != src.len() - a0 - split {
-        return err("kraken: Huffman streams do not meet");
+        return err("package decoder: Huffman streams do not meet");
     }
     Ok(())
 }
